@@ -394,7 +394,19 @@ main{flex:1;padding:0 20px 48px;}
 .sheet-cell.done{background:var(--brand-50);border-color:var(--brand-100);color:var(--text-brand);}
 .sheet-cell.cur{background:var(--brand);border-color:var(--brand);color:#fff;}
 
-/* ---------- results ---------- */
+/* ---------- 随机一题 ---------- */
+.random-bar{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--r-panel);
+  padding:12px 16px;margin:16px 0 0;box-shadow:0 1px 2px rgba(26,26,26,.03);
+}
+.rb-tag{
+  font-size:13px;font-weight:700;color:var(--text-brand);background:var(--brand-50);
+  border:1px solid var(--brand-100);border-radius:var(--r-pill);padding:3px 12px;flex:none;
+}
+.rb-sub{flex:1;font-size:13px;color:var(--ink-3);min-width:0;}
+
+/* ---------- 结果 ---------- */
 .score-card{
   background:var(--paper);border:1px solid var(--line);border-radius:var(--r-panel);
   padding:26px 22px;margin-top:20px;text-align:center;
@@ -741,10 +753,16 @@ function modeRow(view,name,desc){
   return '<button class="mode-row" data-go="'+view+'"><span class="mode-icon">'+(ICONS[view]||"")+'</span><div class="mode-main"><div class="mode-name">'+name+'</div><div class="mode-desc">'+desc+'</div></div>'+CHEV+'</button>';
 }
 function goRandom(){
+  // 随机抽一题：把题库缩到这一道，走正常渲染流程
   const q=QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)];
-  memo={list:[q],idx:0,revealed:false,explain:false,filter:"all"};
-  state.view="memorize";state.back="home";setBar("随机一题","");
-  window.scrollTo(0,0);renderMemoBody();
+  memo={list:[q],idx:0,revealed:false,explain:false,filter:"all",pick:q};
+  go("memorize");
+}
+function shuffleRandom(){
+  const q=QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)];
+  memo.pick=q;memo.idx=0;memo.revealed=false;memo.explain=false;
+  renderMemorize();
+  window.scrollTo(0,0);
 }
 function renderConcepts(){
   setBar("概念白话","");
@@ -766,27 +784,46 @@ function renderConcepts(){
 /* =========================================================
    MEMORIZE (背题)
 ========================================================= */
-let memo={list:[],idx:0,revealed:false,explain:false,filter:"all"};
+let memo={list:[],idx:0,revealed:false,explain:false,filter:"all",pick:null};
 function memoFiltered(){
+  if(memo.pick)return [memo.pick];
   if(memo.filter==="all")return QUESTIONS.slice();
   return QUESTIONS.filter(q=>q.type===memo.filter);
 }
 function renderMemorize(){
-  setBar("背题模式",'<span id="mCount"></span>');
+  const rnd=!!memo.pick;
+  setBar(rnd?"随机一题":"背题模式",rnd?'':'<span id="mCount"></span>');
   const list=memoFiltered();
   $view.innerHTML=
-    '<div class="filterbar" id="memoFilter">'+
-      segBtn("all","全部")+segBtn("single","单选")+segBtn("multiple","多选")+segBtn("bool","判断")+
-    '</div>'+
+    (rnd
+      ? '<div class="random-bar"><span class="rb-tag">随机一题</span><span class="rb-sub">共 '+QUESTIONS.length+' 题里随机抽一道</span><button class="hud-btn" id="mShuffleTop">换一题</button></div>'
+      : '<div class="filterbar" id="memoFilter">'+
+          segBtn("all","全部")+segBtn("single","单选")+segBtn("multiple","多选")+segBtn("bool","判断")+
+        '</div>')+
     '<div id="memoBody"></div>';
-  document.querySelectorAll("#memoFilter button").forEach(b=>{
-    b.onclick=()=>{memo.filter=b.dataset.f;memo.idx=0;memo.revealed=false;memo.explain=false;renderMemorize();};
-  });
-  document.getElementById("mCount").textContent=list.length+" 题";
+  if(!rnd){
+    document.querySelectorAll("#memoFilter button").forEach(b=>{
+      b.onclick=()=>{memo.filter=b.dataset.f;memo.idx=0;memo.revealed=false;memo.explain=false;renderMemorize();};
+    });
+    document.getElementById("mCount").textContent=list.length+" 题";
+  }else{
+    document.getElementById("mShuffleTop").onclick=shuffleRandom;
+  }
   renderMemoBody();
 }
 function segBtn(f,label){
   return '<button data-f="'+f+'" class="'+(memo.filter===f?"on":"")+'">'+label+'</button>';
+}
+function memoNav(saved){
+  if(memo.pick){
+    return '<div class="navrow"><button class="btn '+(saved?"on-saved":"")+'" id="mSave">'+(saved?"已入错题本":"加入错题本")+'</button><button class="btn primary" id="mShuffle">换一题</button></div>';
+  }
+  return '<div class="navrow"><button class="btn" id="mPrev">上一题</button><button class="btn '+(saved?"on-saved":"")+'" id="mSave">'+(saved?"已入错题本":"加入错题本")+'</button><button class="btn primary" id="mNext">下一题</button></div>';
+}
+function memoNavPlain(){
+  // 随机模式下未答题时不给底部按钮，顶部提示条里已经有「换一题」
+  if(memo.pick)return '';
+  return '<div class="navrow"><button class="btn" id="mPrev">上一题</button><button class="btn primary" id="mNext">下一题</button></div>';
 }
 function renderMemoBody(){
   const list=memoFiltered();
@@ -796,48 +833,45 @@ function renderMemoBody(){
   const total=list.length;
   const saved=isWrong(q.id);
   let h='<div class="qcard">';
-  h+='<div class="qmeta"><span class="t">'+TYPE_LABEL[q.type]+' · 第 '+(memo.idx+1)+' / '+total+' 题</span>'+flagTags(q)+'</div>';
+  h+='<div class="qmeta"><span class="t">'+TYPE_LABEL[q.type]+(memo.pick?'':' · 第 '+(memo.idx+1)+' / '+total+' 题')+'</span>'+flagTags(q)+'</div>';
   h+='<div class="qtext">'+esc(q.text)+'</div>';
   h+='<div class="opts">'+optsHtml(q,memo.revealed)+'</div>';
   h+='</div>';
   if(!memo.revealed){
     h+='<button class="reveal-btn" id="mReveal">显示答案</button>';
-    h+='<div class="navrow"><button class="btn" id="mPrev">上一题</button><button class="btn primary" id="mNext">下一题</button></div>';
+    h+=memoNavPlain();
     if(fine)h+='<div class="kbd-hint">先自己判，空格翻面看答案 · ← → 翻页</div>';
   }else if(!memo.explain){
     h+='<div class="answer">'+buildAnswer(q)+'</div>';
     h+='<div class="reveal-hint">先核对一下自己判对没，再点下面看白话讲解。</div>';
     h+='<button class="reveal-btn alt" id="mExplain">看白话讲解 ▸</button>';
-    h+='<div class="navrow"><button class="btn" id="mPrev">上一题</button><button class="btn '+(saved?"on-saved":"")+'" id="mSave">'+(saved?"已入错题本":"加入错题本")+'</button><button class="btn primary" id="mNext">下一题</button></div>';
+    h+=memoNav(saved);
   }else{
     h+='<div class="answer">'+buildAnswer(q)+'</div>';
     h+=buildPlain(q);
     h+=buildConcepts(q);
-    h+='<div class="navrow"><button class="btn" id="mPrev">上一题</button><button class="btn '+(saved?"on-saved":"")+'" id="mSave">'+(saved?"已入错题本":"加入错题本")+'</button><button class="btn primary" id="mNext">下一题</button></div>';
+    h+=memoNav(saved);
   }
   const body=document.getElementById("memoBody");
   body.innerHTML=h;
   const prev=document.getElementById("mPrev"),next=document.getElementById("mNext");
-  prev.onclick=()=>{memo.idx--;memo.revealed=false;memo.explain=false;renderMemoBody();window.scrollTo(0,0);};
-  next.onclick=()=>{memo.idx++;memo.revealed=false;memo.explain=false;renderMemoBody();window.scrollTo(0,0);};
+  if(prev)prev.onclick=()=>{memo.idx--;memo.revealed=false;memo.explain=false;renderMemoBody();window.scrollTo(0,0);};
+  if(next)next.onclick=()=>{memo.idx++;memo.revealed=false;memo.explain=false;renderMemoBody();window.scrollTo(0,0);};
+  const sh=document.getElementById("mShuffle");
+  if(sh)sh.onclick=shuffleRandom;
+  const sv=document.getElementById("mSave");
+  if(sv)sv.onclick=()=>{
+    const now=toggleWrong(q.id);
+    toast(now?"已加入错题本":"已移出错题本");
+    renderMemoBody();
+  };
   if(!memo.revealed){
     document.getElementById("mReveal").onclick=()=>{memo.revealed=true;renderMemoBody();window.scrollTo(0,0);};
   }else if(!memo.explain){
     document.getElementById("mExplain").onclick=()=>{memo.explain=true;renderMemoBody();window.scrollTo(0,0);};
-    document.getElementById("mSave").onclick=()=>{
-      const now=toggleWrong(q.id);
-      toast(now?"已加入错题本":"已移出错题本");
-      renderMemoBody();
-    };
-  }else{
-    document.getElementById("mSave").onclick=()=>{
-      const now=toggleWrong(q.id);
-      toast(now?"已加入错题本":"已移出错题本");
-      renderMemoBody();
-    };
   }
-  prev.disabled=memo.idx===0;
-  next.disabled=memo.idx===total-1;
+  if(prev)prev.disabled=memo.idx===0;
+  if(next)next.disabled=memo.idx===total-1;
 }
 
 /* =========================================================
@@ -1213,7 +1247,11 @@ function render(){
 }
 $view.addEventListener("click",e=>{
   const row=e.target.closest("[data-go]");
-  if(row){go(row.dataset.go);}
+  if(row){
+    // 从首页进「背题模式」= 退出随机模式，回到完整题库
+    if(row.dataset.go==="memorize"){memo.pick=null;memo.filter="all";memo.idx=0;memo.revealed=false;memo.explain=false;}
+    go(row.dataset.go);
+  }
 });
 /* 答题卡弹层 */
 document.getElementById("sheetClose").onclick=closeSheet;
