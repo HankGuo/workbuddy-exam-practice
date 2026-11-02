@@ -1,11 +1,13 @@
 // 增强题库数据：给每题加 plain（白话讲解）+ concepts（概念标签），并生成 CONCEPTS 概念卡库。
 // 用法：node augment.js  -> 重写 data.js
 const fs = require("fs");
-const src = fs.readFileSync("data.js", "utf8");
-const mMeta = src.match(/const META\s*=\s*(\{[^}]*\});/);
-const mQ = src.match(/const QUESTIONS\s*=\s*(\[[\s\S]*?\n\];)/);
-const META = mMeta[1];
-const QUESTIONS = eval("(" + mQ[1].replace(/;\s*$/, "") + ")");
+const vm = require("vm");
+// 用 vm 整体加载 data.js，避免正则解析紧凑 JSON 时踩坑
+const _ctx = {};
+vm.createContext(_ctx);
+vm.runInContext(fs.readFileSync("data.js", "utf8") + "\nthis.__Q=QUESTIONS;this.__C=CONCEPTS;", _ctx);
+const QUESTIONS = _ctx.__Q;
+const EXISTING_CONCEPTS = _ctx.__C;
 
 // ---- 每题白话讲解（plain）与概念标签（concepts） ----
 const PLAIN = {
@@ -133,16 +135,32 @@ multimodal:{t:"文件读取 / 多模态",life:`AI 读不了图片/PDF/Excel？�
 agent_assistant:{t:"助理（远程控制）",life:`助理像你手机上的遥控器，能微信/企微/飞书远程指挥电脑上的 WorkBuddy。但遥控器的前提是“电视开着”——电脑得保持开机运行 WorkBuddy，否则云端任务也接不住。助理≠连接器（一个是远程控制入口，一个是外部服务对接）。`,body:`助理支持多 IM 远程控制；需电脑开机。助理和连接器不是一回事。`},
 };
 
-// 合并
+// 合并（PDF 补充题库已自带 plain / concepts，不覆盖）
 QUESTIONS.forEach(q=>{
-  q.plain = PLAIN[q.id] || "";
-  q.concepts = CONCEPTS_MAP[q.id] || [];
+  if(!q.plain)q.plain = PLAIN[q.id] || "";
+  if(!q.concepts)q.concepts = CONCEPTS_MAP[q.id] || [];
 });
 
+// 并入《WorkBuddy·销售一页纸（二）·企业版 vs 个人版》补充题
+const PDF = require("./pdf_questions.js");
+Object.assign(CONCEPTS, EXISTING_CONCEPTS, PDF.concepts);
+const existing = new Set(QUESTIONS.map(q=>q.id));
+let added = 0;
+PDF.questions.forEach(q=>{
+  if(existing.has(q.id))return;
+  QUESTIONS.push(q);added++;
+});
+
+// 按实际题型重算 META
+const cnt=t=>QUESTIONS.filter(q=>q.type===t).length;
+const META_NEW={single:cnt("single"),multiple:cnt("multiple"),bool:cnt("bool"),total:QUESTIONS.length};
+
 // 写出新 data.js
-let out = "// 自动生成，勿手改。来源：题库合并-两卷93题-给吴熳.md（已增强 plain/concepts/CONCEPTS）\n";
-out += "const META = " + META + ";\n";
+let out = "// 自动生成，勿手改。来源：题库合并-两卷93题-给吴熳.md + WorkBuddy销售一页纸(二)补充题\n";
+out += "const META = " + JSON.stringify(META_NEW) + ";\n";
 out += "const QUESTIONS = " + JSON.stringify(QUESTIONS, null, 0) + ";\n";
 out += "const CONCEPTS = " + JSON.stringify(CONCEPTS, null, 0) + ";\n";
 fs.writeFileSync("data.js", out);
-console.log("data.js 已增强：", QUESTIONS.length, "题，", Object.keys(CONCEPTS).length, "张概念卡");
+console.log("data.js 已生成：", QUESTIONS.length, "题（新增", added, "），", Object.keys(CONCEPTS).length, "张概念卡");
+console.log("题型分布：单选", META_NEW.single, "多选", META_NEW.multiple, "判断", META_NEW.bool);
+

@@ -16,6 +16,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   // home
   out.modeRows=await page.$$eval('.mode-row',els=>els.length);
   out.hasRand=await page.$('#randBtn')?true:false;
+  out.heroTotal=await page.evaluate(()=>{const m=document.querySelector('.hero-sub');return m?m.textContent:null;});
 
   // 背题 two-step
   await page.evaluate(()=>document.querySelector('[data-go="memorize"]').click());
@@ -36,6 +37,16 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   await sleep(150);
   out.conceptCards=await page.$$eval('.cc-card',e=>e.length);
   out.conceptTitle=await page.$eval('.cc-t',e=>e.textContent).catch(()=>null);
+  // 新增内容断言：PDF 补充题已生效
+  out.anchorsCount=await page.evaluate(()=>{
+    document.getElementById('backBtn').click();
+    document.querySelector('[data-go="notes"]').click();
+    return document.querySelectorAll('.num-list li').length;
+  });
+  await sleep(150);
+  out.newAnchorPresent=await page.evaluate(()=>document.body.innerText.includes('个人版四档')&&document.body.innerText.includes('折扣红线'));
+  await page.evaluate(()=>{document.getElementById('backBtn').click();});
+  await sleep(120);
 
   // 真实答题 sim50
   await page.evaluate(()=>{document.getElementById('backBtn').click();});
@@ -104,9 +115,10 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   await browser.close();
   // 判定
   const ok = out.modeRows===5 && out.hasRand && out.revealHasAnswer && out.revealHasExplainBtn &&
-    out.explainHasPlain && out.conceptCards===20 && out.resultScore && out.errors.length===0 && out.hScroll===0 &&
+    out.explainHasPlain && out.conceptCards>=26 && out.resultScore && out.errors.length===0 && out.hScroll===0 &&
     out.hasHud && out.hasActionBar && out.hasQcard && out.hasSheetBtn && out.timerCountsDown &&
-    out.sheetOpen && out.sheetClosed && out.sheetCells>0;
+    out.sheetOpen && out.sheetClosed && out.sheetCells>0 &&
+    !!out.heroTotal && out.heroTotal.includes('133') && out.anchorsCount>=14 && out.newAnchorPresent;
   console.log(ok?'==== ALL PASS ====':'==== FAIL ====');
   process.exit(ok?0:1);
 })().catch(e=>{console.error(e);process.exit(2);});

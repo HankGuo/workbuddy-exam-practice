@@ -2,7 +2,8 @@
 
 基于「WorkBuddy 讲师认证考试 · 题库合并（两卷去重 93 题）」做的单文件模拟练习 Web 应用。
 
-- 题型覆盖：单选 56 · 多选 18 · 判断 19（共 93 题），实锤答案、推荐答案、高频必背均已标注
+- 题型覆盖：单选 81 · 多选 28 · 判断 24（共 133 题），实锤答案、推荐答案、高频必背均已标注
+- 两份来源：①《题库合并-两卷93题》93 题 ②《WorkBuddy·销售一页纸（二）·企业版 vs 个人版》(v5.2.1, 2026-07-04) 补充 40 题
 - 五大模式：背题模式（两步翻面）、真实答题（按真实考试结构抽题 / 计时 / 判分 / 连对统计）、错题本（localStorage 持久化）、**概念白话**、备考要点（价格数字锚点 + 临场清单）
 - 形态：单个自包含 `index.html`，无外部依赖、无网络请求，可直接在微信内置浏览器打开
 
@@ -83,7 +84,10 @@
 build_questions.py   # 原始 markdown -> data.js（META + QUESTIONS）
 augment.js           # 注入每题 plain（白话讲解）与 concepts（概念标签），并生成 CONCEPTS 卡库 -> data.js
 build.js             # 把 data.js 重新内联进 index.html（保持单文件）
-node _verify.js      # 真浏览器端到端验收（两步翻面 / 概念卡 / 模拟 50 题 / 无横向滚动 / 无报错）
+pdf_questions.js     # 销售一页纸补充的 40 题 + 6 张新概念卡
+node augment.js      # 合并基础题库 + 补充题库，注入 plain/concepts，重算 META -> data.js
+node build.js        # 把 data.js 重新内联进 index.html（保持单文件）
+node _verify.js      # 真浏览器端到端验收（两步翻面 / 概念卡 / 模拟 50 题 / 数字锚点 / 无横向滚动 / 无报错）
 node _shots.js       # 截图，用于视觉复核
 ```
 
