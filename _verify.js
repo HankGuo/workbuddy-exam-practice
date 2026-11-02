@@ -45,8 +45,29 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   // 选 sim50
   await page.evaluate(()=>{const b=[...document.querySelectorAll('[data-seg="qty"] button')].find(x=>x.dataset.v==='sim50');b&&b.click();});
   await sleep(100);
+  // 开 90 分钟计时
+  await page.evaluate(()=>{const b=[...document.querySelectorAll('[data-seg="timer"] button')].find(x=>x.dataset.v==='90');b&&b.click();});
+  await sleep(100);
   await page.evaluate(()=>document.getElementById('startExam').click());
   await sleep(150);
+  // 新版答题页结构断言
+  out.hasHud=await page.evaluate(()=>!!document.querySelector('.hud'));
+  out.hasActionBar=await page.evaluate(()=>!!document.querySelector('.action-bar'));
+  out.hasQcard=await page.evaluate(()=>!!document.querySelector('.qcard'));
+  out.hasSheetBtn=await page.evaluate(()=>!!document.getElementById('sheetOpen'));
+  const t1=await page.evaluate(()=>{const r=document.getElementById('timerRing');return r?{txt:r.querySelector('.tr-txt').textContent,off:r.querySelector('.tr-fg').getAttribute('stroke-dashoffset')}:null;});
+  await sleep(2200);
+  const t2=await page.evaluate(()=>{const r=document.getElementById('timerRing');return r?{txt:r.querySelector('.tr-txt').textContent,off:r.querySelector('.tr-fg').getAttribute('stroke-dashoffset')}:null;});
+  out.timer=t1; out.timerAfter=t2;
+  out.timerCountsDown = !!(t1&&t2&&t1.txt!==t2.txt&&parseFloat(t2.off)>parseFloat(t1.off));
+  // 答题卡
+  await page.evaluate(()=>{const b=document.getElementById('sheetOpen');if(b)b.click();});
+  await sleep(350);
+  out.sheetOpen=await page.evaluate(()=>document.getElementById('sheet').classList.contains('show'));
+  out.sheetCells=await page.$$eval('.sheet-cell',e=>e.length);
+  await page.evaluate(()=>{const b=document.getElementById('sheetClose');if(b)b.click();});
+  await sleep(300);
+  out.sheetClosed=await page.evaluate(()=>!document.getElementById('sheet').classList.contains('show'));
   // 答 50 题：每题点第一个选项，再下一题/提交
   for(let i=0;i<50;i++){
     await page.evaluate(()=>{const o=document.querySelector('#exOpts .opt');if(o)o.click();});
@@ -83,7 +104,9 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   await browser.close();
   // 判定
   const ok = out.modeRows===5 && out.hasRand && out.revealHasAnswer && out.revealHasExplainBtn &&
-    out.explainHasPlain && out.conceptCards===20 && out.resultScore && out.errors.length===0 && out.hScroll===0;
+    out.explainHasPlain && out.conceptCards===20 && out.resultScore && out.errors.length===0 && out.hScroll===0 &&
+    out.hasHud && out.hasActionBar && out.hasQcard && out.hasSheetBtn && out.timerCountsDown &&
+    out.sheetOpen && out.sheetClosed && out.sheetCells>0;
   console.log(ok?'==== ALL PASS ====':'==== FAIL ====');
   process.exit(ok?0:1);
 })().catch(e=>{console.error(e);process.exit(2);});
