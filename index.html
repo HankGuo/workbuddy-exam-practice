@@ -1,0 +1,4111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23F4F1EA'/><circle cx='16' cy='16' r='7' fill='%239E3B30'/></svg>">
+<title>讲师认证题库自测</title>
+<style>
+:root{
+  --paper:#F4F1EA;
+  --paper-2:#ECE7DB;
+  --paper-3:#E4DECF;
+  --ink:#23211C;
+  --ink-2:#4A463E;
+  --ink-3:#8A8478;
+  --line:#D9D3C5;
+  --line-soft:#E3DDD0;
+  --seal:#9E3B30;
+  --seal-deep:#83302A;
+  --seal-soft:rgba(158,59,48,.10);
+  --ok:#3F6B4E;
+  --ok-soft:rgba(63,107,78,.12);
+  --serif:"Songti SC","STSong","SimSun","Noto Serif SC",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --ease:cubic-bezier(.23,1,.32,1);
+  --maxw:760px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--paper);
+  font-size:16px;
+  line-height:1.7;
+  -webkit-text-size-adjust:100%;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.grain{
+  position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.045;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.app{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;}
+
+/* top bar */
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;gap:10px;
+  padding:14px 20px;
+  background:rgba(244,241,234,.9);
+  backdrop-filter:saturate(1.1) blur(6px);
+  -webkit-backdrop-filter:saturate(1.1) blur(6px);
+  border-bottom:1px solid var(--line-soft);
+}
+.back{
+  appearance:none;border:none;background:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:var(--sans);font-size:15px;color:var(--ink-2);
+  padding:6px 2px;min-height:40px;
+}
+.back svg{width:18px;height:18px;stroke:var(--ink-2);}
+.back.hidden{visibility:hidden;}
+.topTitle{flex:1;font-size:16px;font-weight:600;letter-spacing:.02em;}
+.topRight{font-size:13px;color:var(--ink-3);min-height:24px;display:flex;align-items:center;gap:6px;}
+
+main{flex:1;padding:0 20px 40px;}
+
+/* home */
+.hero{padding:46px 0 30px;}
+.kicker{
+  font-size:12px;letter-spacing:.28em;color:var(--seal);font-weight:600;
+  text-transform:uppercase;margin-bottom:14px;
+}
+.hero-title{
+  font-family:var(--serif);font-weight:600;font-size:clamp(34px,9vw,52px);
+  line-height:1.1;margin:0 0 14px;letter-spacing:.04em;
+}
+.hero-sub{margin:0;color:var(--ink-2);font-size:15px;max-width:34ch;}
+.rule{height:1px;background:var(--line);margin:26px 0 6px;}
+
+.mode-row{
+  appearance:none;width:100%;text-align:left;cursor:pointer;
+  background:none;border:none;border-top:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;
+  padding:22px 2px;font-family:var(--sans);color:var(--ink);
+  transition:padding-left .25s var(--ease);
+}
+.mode-row:last-child{border-bottom:1px solid var(--line);}
+@media(hover:hover) and (pointer:fine){
+  .mode-row:hover{padding-left:10px;}
+}
+.mode-main{flex:1;}
+.mode-name{font-family:var(--serif);font-size:21px;font-weight:600;letter-spacing:.03em;}
+.mode-desc{margin-top:4px;font-size:13.5px;color:var(--ink-3);line-height:1.55;}
+.mode-row .chev{width:20px;height:20px;flex:none;stroke:var(--ink-3);transition:transform .25s var(--ease);}
+@media(hover:hover) and (pointer:fine){
+  .mode-row:hover .chev{transform:translateX(4px);stroke:var(--seal);}
+}
+.mode-badge{
+  font-size:12px;color:var(--seal);background:var(--seal-soft);
+  border-radius:20px;padding:3px 10px;font-variant-numeric:tabular-nums;flex:none;
+}
+
+.guide{
+  margin-top:30px;padding:16px 18px;border:1px solid var(--line);
+  border-radius:4px;background:var(--paper-2);
+  font-size:13px;color:var(--ink-2);line-height:1.7;
+}
+.guide b{color:var(--ink);font-weight:600;}
+
+/* filter bar */
+.filterbar{
+  display:flex;gap:8px;flex-wrap:wrap;padding:18px 0 6px;
+}
+.seg{
+  display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden;
+  background:var(--paper);
+}
+.seg button{
+  appearance:none;border:none;background:none;cursor:pointer;
+  font-family:var(--sans);font-size:14px;color:var(--ink-2);
+  padding:9px 16px;min-height:42px;transition:background .15s,color .15s;
+}
+.seg button + button{border-left:1px solid var(--line);}
+.seg button.on{background:var(--ink);color:var(--paper);}
+
+/* question / flip */
+.qmeta{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  font-size:13px;color:var(--ink-3);margin:22px 0 12px;
+}
+.qmeta .t{color:var(--ink-2);font-weight:600;}
+.tag{
+  font-size:11.5px;padding:2px 9px;border-radius:20px;letter-spacing:.04em;
+  border:1px solid var(--line);color:var(--ink-3);
+}
+.tag.hot{color:var(--seal);border-color:rgba(158,59,48,.35);background:var(--seal-soft);}
+.tag.rec{color:var(--ok);border-color:rgba(63,107,78,.35);background:var(--ok-soft);}
+
+.qtext{
+  font-size:18px;line-height:1.85;color:var(--ink);
+  font-weight:500;letter-spacing:.01em;margin:0 0 22px;
+}
+.opts{display:flex;flex-direction:column;gap:10px;margin:0 0 8px;}
+.opt{
+  display:flex;gap:12px;align-items:flex-start;
+  border:1px solid var(--line);border-radius:4px;
+  padding:14px 16px;background:var(--paper);
+  cursor:pointer;min-height:52px;
+  transition:border-color .15s var(--ease),background .15s var(--ease);
+}
+.opt .lk{
+  flex:none;width:26px;height:26px;border-radius:50%;
+  border:1px solid var(--ink-3);display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:600;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;margin-top:1px;
+}
+.opt .lt{flex:1;font-size:15.5px;line-height:1.6;color:var(--ink);}
+.opt.multi .lk{border-radius:5px;}
+@media(hover:hover) and (pointer:fine){
+  .opt:hover{border-color:var(--ink-3);}
+}
+.opt.sel{border-color:var(--seal);background:var(--seal-soft);}
+.opt.sel .lk{background:var(--seal);border-color:var(--seal);color:var(--paper);}
+.opt.correct{border-color:var(--ok);background:var(--ok-soft);}
+.opt.correct .lk{background:var(--ok);border-color:var(--ok);color:var(--paper);}
+.opt.wrong{border-color:var(--seal);background:var(--seal-soft);}
+.opt.wrong .lk{background:var(--seal);border-color:var(--seal);color:var(--paper);}
+.opt.dim{opacity:.55;}
+
+.reveal-btn{
+  appearance:none;cursor:pointer;margin-top:20px;
+  background:none;border:1px solid var(--ink);color:var(--ink);
+  font-family:var(--sans);font-size:15px;font-weight:600;
+  padding:13px 22px;border-radius:3px;min-height:48px;width:100%;
+  transition:background .15s,color .15s;
+}
+@media(hover:hover) and (pointer:fine){
+  .reveal-btn:hover{background:var(--ink);color:var(--paper);}
+}
+
+.answer{
+  margin-top:18px;border-top:1px solid var(--line);padding-top:18px;
+  animation:fade .28s var(--ease) both;
+}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.ex-label{
+  display:inline-block;font-size:11.5px;letter-spacing:.12em;color:var(--seal);
+  border:1px solid rgba(158,59,48,.35);
+  border-radius:3px;padding:2px 8px;margin-right:10px;vertical-align:middle;
+}
+.ex-ans{font-size:15.5px;line-height:1.8;margin:0 0 14px;color:var(--ink);}
+.ans-key{
+  display:inline-block;min-width:22px;height:22px;line-height:22px;text-align:center;
+  background:var(--ok);color:var(--paper);border-radius:4px;font-weight:600;
+  font-size:13px;margin-right:8px;font-variant-numeric:tabular-nums;
+}
+.ex-anchor{font-size:14.5px;line-height:1.75;color:var(--ink-2);margin:0 0 12px;
+  border-left:3px solid var(--seal);padding-left:12px;}
+.ex-notes{margin:0 0 6px;}
+.ex-note{font-size:14px;line-height:1.7;color:var(--ink-2);margin:0 0 8px;}
+.ex-note .ex-x{color:var(--seal);font-weight:700;margin-right:6px;}
+.ex-note b{color:var(--ink);}
+
+/* nav row */
+.navrow{display:flex;gap:10px;margin-top:26px;}
+.btn{
+  flex:1;appearance:none;cursor:pointer;font-family:var(--sans);
+  font-size:15px;font-weight:600;padding:14px 16px;border-radius:3px;min-height:50px;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink-2);
+  transition:background .15s,color .15s,border-color .15s;
+}
+.btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.btn.seal{background:var(--seal);color:#fff;border-color:var(--seal);}
+.btn.on-saved{background:var(--ok-soft);color:var(--ok);border-color:rgba(63,107,78,.35);}
+@media(hover:hover) and (pointer:fine){
+  .btn:hover{filter:brightness(.97);}
+}
+.btn:active{transform:scale(.985);}
+
+/* exam config */
+.cfg-block{margin:26px 0;}
+.cfg-title{font-family:var(--serif);font-size:17px;font-weight:600;margin:0 0 12px;letter-spacing:.03em;}
+.cfg-note{font-size:13px;color:var(--ink-3);margin:-6px 0 14px;line-height:1.6;}
+.start-btn{
+  appearance:none;cursor:pointer;width:100%;margin-top:14px;
+  background:var(--seal);color:#fff;border:none;
+  font-family:var(--sans);font-size:17px;font-weight:600;letter-spacing:.04em;
+  padding:17px;border-radius:3px;min-height:56px;
+  transition:background .15s;
+}
+.start-btn:active{transform:scale(.99);}
+@media(hover:hover) and (pointer:fine){.start-btn:hover{background:var(--seal-deep);}}
+
+/* exam top status */
+.exam-status{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 0 6px;font-size:13px;color:var(--ink-3);
+}
+.timer{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink-2);letter-spacing:.04em;}
+.timer.warn{color:var(--seal);}
+.hint-multi{font-size:13px;color:var(--seal);margin:0 0 12px;}
+
+/* results */
+.score-card{
+  border:1px solid var(--line);border-radius:5px;background:var(--paper-2);
+  padding:26px 24px;margin:24px 0 8px;text-align:center;
+}
+.score-num{font-family:var(--serif);font-size:clamp(46px,14vw,68px);font-weight:600;line-height:1;
+  font-variant-numeric:tabular-nums;}
+.score-num small{font-size:.4em;color:var(--ink-3);font-family:var(--sans);font-weight:500;margin-left:6px;}
+.score-sub{margin-top:10px;font-size:14px;color:var(--ink-2);}
+.score-pass{display:inline-block;margin-top:12px;font-size:13px;padding:4px 14px;border-radius:20px;}
+.score-pass.ok{color:var(--ok);background:var(--ok-soft);}
+.score-pass.no{color:var(--seal);background:var(--seal-soft);}
+.brk{margin:20px 0;display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:5px;overflow:hidden;}
+.brk-row{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;}
+.brk-row + .brk-row{border-top:1px solid var(--line-soft);}
+.brk-row .bl{font-size:14px;color:var(--ink-2);}
+.brk-row .bv{font-size:14px;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600;}
+.wrong-head{margin:26px 0 8px;font-family:var(--serif);font-size:17px;font-weight:600;letter-spacing:.03em;}
+.wrong-list{display:flex;flex-direction:column;}
+.wrong-item{
+  display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);
+  padding:15px 2px;cursor:pointer;
+}
+.wrong-item:last-child{border-bottom:1px solid var(--line);}
+.wi-main{flex:1;min-width:0;}
+.wi-t{font-size:14.5px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.wi-m{font-size:12.5px;color:var(--ink-3);margin-top:3px;}
+.wi-go{font-size:13px;color:var(--seal);flex:none;}
+
+/* notes page */
+.notes-sec{margin:28px 0;}
+.notes-sec h3{font-family:var(--serif);font-size:18px;font-weight:600;margin:0 0 14px;letter-spacing:.03em;
+  border-bottom:2px solid var(--ink);padding-bottom:8px;}
+.num-list{list-style:none;margin:0;padding:0;}
+.num-list li{padding:13px 0;border-top:1px solid var(--line-soft);font-size:14.5px;line-height:1.7;color:var(--ink-2);
+  display:flex;gap:12px;}
+.num-list li:first-child{border-top:none;}
+.num-list .nk{flex:none;font-weight:600;color:var(--seal);font-variant-numeric:tabular-nums;min-width:64px;}
+.tips{list-style:none;margin:0;padding:0;counter-reset:t;}
+.tips li{padding:13px 0;border-top:1px solid var(--line-soft);font-size:14.5px;line-height:1.7;color:var(--ink-2);
+  position:relative;padding-left:30px;}
+.tips li:first-child{border-top:none;}
+.tips li:before{counter-increment:t;content:counter(t);position:absolute;left:0;top:13px;
+  width:20px;height:20px;border-radius:50%;border:1px solid var(--ink-3);color:var(--ink-3);
+  font-size:11px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;}
+
+/* empty state */
+.empty{padding:60px 10px;text-align:center;color:var(--ink-3);}
+.empty .et{font-family:var(--serif);font-size:20px;color:var(--ink-2);margin-bottom:10px;}
+.empty .ed{font-size:14px;margin-bottom:20px;line-height:1.6;}
+
+/* toast */
+.toast{
+  position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:var(--paper);font-size:14px;padding:12px 20px;border-radius:30px;
+  z-index:60;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s var(--ease);
+  max-width:86%;text-align:center;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* confirm overlay */
+.overlay{
+  position:fixed;inset:0;z-index:50;background:rgba(35,33,28,.42);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.overlay.show{opacity:1;pointer-events:auto;}
+.dialog{
+  background:var(--paper);border-radius:6px;max-width:340px;width:100%;
+  padding:24px 22px 18px;border:1px solid var(--line);
+  box-shadow:0 18px 50px rgba(35,33,28,.22);
+}
+.dialog h4{margin:0 0 8px;font-family:var(--serif);font-size:19px;font-weight:600;}
+.dialog p{margin:0 0 18px;font-size:14.5px;color:var(--ink-2);line-height:1.65;}
+.dialog .dbtns{display:flex;gap:10px;}
+
+.kbd-hint{font-size:12.5px;color:var(--ink-3);margin-top:10px;line-height:1.7;}
+.kbd-hint b{color:var(--ink-2);font-weight:600;}
+
+@media (max-width:480px){
+  main{padding:0 16px 36px;}
+  .topbar{padding:12px 16px;}
+  .qtext{font-size:17px;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="app">
+  <header class="topbar">
+    <button class="back hidden" id="backBtn" aria-label="返回">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      返回
+    </button>
+    <div class="topTitle" id="topTitle"></div>
+    <div class="topRight" id="topRight"></div>
+  </header>
+  <main id="view"></main>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="overlay" id="overlay">
+  <div class="dialog">
+    <h4 id="dlgTitle"></h4>
+    <p id="dlgText"></p>
+    <div class="dbtns">
+      <button class="btn" id="dlgCancel">取消</button>
+      <button class="btn seal" id="dlgOk">确认</button>
+    </div>
+  </div>
+</div>
+
+<script>// 自动生成，勿手改。来源：题库合并-两卷93题-给吴熳.md
+const META = {"single": 56, "multiple": 18, "bool": 19, "total": 93};
+const QUESTIONS = [
+ {
+  "id": "s1",
+  "type": "single",
+  "no": 1,
+  "text": "客户反馈机器人已完成接入、WorkBuddy 端显示已注册或已配置完成，但发送消息后没有响应。正确的排查思路是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "先确认当前连接状态是否仍然在线，再优先切换模型后再次测试，部分无响应问题可通过切换模型缓解",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "直接卸载客户端并重新完成一次接入配置",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "提交退货退款工单，等待腾讯云客服在两个工作日内审核处理",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "将复杂任务拆分为更小步骤后重新接入平台",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s2",
+  "type": "single",
+  "no": 2,
+  "text": "客户在签约前问：\"积分会不会过期？\"按照红线第5条，正确的应对是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "告诉客户积分永久有效，先把单签下来",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "说积分到期会自动结转，让客户放心",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "客户不问就不主动提，等签约后再解释",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "按腾讯云订购协议6.3，企业版套件积分在服务期限届满时失效、不自动结转——要主动说清楚别藏着，同时顺势推长期的好处：\"按年买比按月买，中间不用经历额度清零\"",
+    "note": "选这个"
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s3",
+  "type": "single",
+  "no": 3,
+  "text": "客户说：\"万一买了大家都不用怎么办。\"这位客户担的其实是什么，销售应如何应对？",
+  "options": [
+   {
+    "key": "A",
+    "text": "他担的是自己的绩效风险——讲管理后台的用量可视，让他\"看得住\"",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "他嫌价格贵——立刻申请折扣留住他",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "他不懂技术——安排架构师做一次深度讲解",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "他在拒绝企业版——应转为推个人版先收一单",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s4",
+  "type": "single",
+  "no": 4,
+  "text": "客户合规负责人在安全评审中问：「WorkBuddy 的用户协议与隐私协议是否符合国内相关法规？」正确的回答是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "符合《网络安全法》《数据安全法》《个人信息保护法》",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "仅符合 ISO 27001，国内法规暂不适用",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "仅符合欧盟 GDPR",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "尚未通过任何合规认证",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s5",
+  "type": "single",
+  "no": 5,
+  "text": "客户使用旗舰版内置的腾讯文档时，提出需要把表格能力从 2000 行提升到 4 万行、表格自动化次数从 100 次提升到 5 万次/人。该能力应如何获得？",
+  "options": [
+   {
+    "key": "A",
+    "text": "属于腾讯文档的旗舰版内置权益，购买旗舰版后直接获得",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "属于腾讯文档的旗舰版可升级权益，需在购买后升级",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "需将版本升级为企业专享版后自动获得",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "需采购私有化企业版后自动获得",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s6",
+  "type": "single",
+  "no": 6,
+  "text": "某客户团队以产品经理、设计师、全栈开发者和编程初学者为主，希望一个工具打通从需求规划到产品发布的全流程。最适合推荐哪款产品？",
+  "options": [
+   {
+    "key": "A",
+    "text": "CodeBuddy，面向智能编码，是覆盖从需求规划到产品部署全流程闭环的产设研一体工作台",
+    "note": "选这个（已实锤）"
+   },
+   {
+    "key": "B",
+    "text": "WorkBuddy，面向 AI 办公协同的全场景职场 AI 智能体桌面工作台",
+    "note": "⚠️ 高频坑"
+   },
+   {
+    "key": "C",
+    "text": "WorkBuddy Managed Agents，提供云端托管的智能体运行服务",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "腾讯混元大模型，直接作为对话底座使用",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": true
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s7",
+  "type": "single",
+  "no": 7,
+  "text": "客户担心「我们同事不会写提示词，也不懂怎么把复杂任务拆成步骤」，此时应重点介绍 WorkBuddy 的哪项核心能力？",
+  "options": [
+   {
+    "key": "A",
+    "text": "自然语言交互，使用自然语言描述需求，无需预先拆分复杂操作步骤",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "需要用户先提交一份详细的分步操作清单，系统才能开始执行",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "必须先由 IT 部门编写脚本，再导入系统运行",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "仅支持在固定模板中填写参数后单次执行",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s8",
+  "type": "single",
+  "no": 8,
+  "text": "客户说：\"我先买个个人版试试好不好用。\"按照转版话术的分诊框架，销售的正确第一反应是什么？",
+  "options": [
+   {
+    "key": "A",
+    "text": "立刻拦住客户，强调只有企业版才有保障，个人版不值得买",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "不拦，改成给客户一条\"试完不用推倒重来\"的路：建议他挑三四个岗位的同事一起进一个项目，将来直接升级企业坐席",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "先花半小时讲完企业版管理后台功能，再让客户自己选",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "告诉客户个人版功能阉割严重，试用没有参考价值",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s9",
+  "type": "single",
+  "no": 9,
+  "text": "客户已采购 WorkBuddy 企业版，研发负责人接着问：\"我们研发团队还想用 CodeBuddy，是不是要再单独买一套授权？\"讲师的正确回应是：",
+  "options": [
+   {
+    "key": "A",
+    "text": "需要单独购买一套 CodeBuddy 授权，两个产品分别计费",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "CodeBuddy 只随个人版赠送，企业版不包含",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "研发团队只能申请 CodeBuddy 的限时试用，无法正式使用",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "一个 License 双产品通用，企业版订阅同时覆盖 WorkBuddy 与 CodeBuddy，这也是企业版的核心卖点之一",
+    "note": "选这个"
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s10",
+  "type": "single",
+  "no": 10,
+  "text": "客户希望一个复杂任务可以由多个 Agent 同时协作推进，并在任务列表中持久保存、随时用 IDE 打开查看。讲师应建议对该任务执行哪种操作？",
+  "options": [
+   {
+    "key": "A",
+    "text": "置顶",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "重命名",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "保存到工作空间",
+    "note": "选这个"
+   },
+   {
+    "key": "D",
+    "text": "归档",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s11",
+  "type": "single",
+  "no": 11,
+  "text": "面对企业客户做产品介绍时，三场演练暴露\"无一人主动提及\"安全性要点。按照导师要求，正确做法是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "等客户问到数据安全再讲，显得不心虚",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "开场就主动说：\"WorkBuddy所有工作内容都在您本地执行，不会造成数据泄露，也不会拿去训练AI\"——企业客户听到这条，信任立建",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "这个点太技术化，留给架构师在后续环节讲",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "放到演示最后一页一笔带过即可",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": true
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s12",
+  "type": "single",
+  "no": 12,
+  "text": "客户用 WorkBuddy 完成一份行业分析报告后，希望把成果直接发给部门同事，讲师应演示什么操作？",
+  "options": [
+   {
+    "key": "A",
+    "text": "在右侧结果区打开产物列表下拉框，右键点击对应产物文件选择分享文件；或在预览产物时选择上传至云端",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "在任务列表中将该任务置顶后即可分享",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "把任务保存到工作空间即可自动分享给同事",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "在自动化页面开启推送到小程序",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s13",
+  "type": "single",
+  "no": 13,
+  "text": "某客户希望 AI 在做任务时能直接访问公司正在使用的外部业务服务，以获取实时数据支撑任务。应引导客户使用哪种扩展方式？",
+  "options": [
+   {
+    "key": "A",
+    "text": "连接器，通过连接器访问外部服务，为任务提供数据和知识支持",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "资料库，主要用于沉淀和使用企业内部知识",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "专家，用于复用专业知识与工作方法",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "技能，用于把云端 Agent 一键下发至 WorkBuddy 端的企业智能体列表",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s14",
+  "type": "single",
+  "no": 14,
+  "text": "客户使用 VS Code 插件登录时报错，提示 timeout of 30000ms exceeded。正确的处理步骤是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "顶部搜索框输入 >show out 并选择显示输出通道，将输出通道选择为 CodeBuddy，复制其中对应位置的链接并在浏览器打开，进行扫码登录",
+    "note": "⭐ 改选这个"
+   },
+   {
+    "key": "B",
+    "text": "在设置中搜索 @id:workbench.externalBrowser，将默认浏览器设置为 Chrome 后重启 IDE",
+    "note": "⚠️ 至少不是这个"
+   },
+   {
+    "key": "C",
+    "text": "在设置中搜索 shell，将 Terminal > Integrated > Shell Integrated 开启为 Enable",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "在设置中搜索 gallery，将地址配置为 https://marketplace.visualstudio.com 后重启 IDE",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": false,
+   "recommended": true,
+   "hot": false
+  },
+  "anchor": "VS Code 登录 timeout：>show out 打开输出通道选 CodeBuddy，复制链接浏览器扫码"
+ },
+ {
+  "id": "s15",
+  "type": "single",
+  "no": 15,
+  "text": "客户希望调用「AI 问答 API、平台管理 API、乐享 Claw MCP」对接自有系统。该能力属于旗舰版内置产品的哪一类权益？",
+  "options": [
+   {
+    "key": "A",
+    "text": "腾讯乐享知识库的可升级权益（开放平台）",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "腾讯乐享知识库的旗舰版内置权益",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "腾讯文档的可升级权益（企业个性化与系统集成）",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "安全与效能运营平台的旗舰版内置权益",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s16",
+  "type": "single",
+  "no": 16,
+  "text": "客户希望把企业内部系统和外部服务接入 WorkBuddy，以扩展 AI 能力。讲师应介绍哪项能力？",
+  "options": [
+   {
+    "key": "A",
+    "text": "只能通过自动化定时触发外部服务，无法直接连接",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "在任务栏快捷管理连接器，连接外部服务，扩展 AI 能力",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "必须使用完全访问权限才能连接外部服务",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "在资料库中添加外部服务账号即可完成接入",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s17",
+  "type": "single",
+  "no": 17,
+  "text": "客户老板问：\"这钱花出去，到底谁在用、用在哪了？你用什么回答我？\"按照支点4，正确的回应是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "个人版也有企业级用量看板，一样能查",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "企业版管理后台，管理员一张表就能看到这个月总共用了多少额度、还剩多少、分布在哪些产品上、哪些人用得多，该视图仅向管理员开放",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "让行政每月向员工收集使用截图汇总上报",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "管理员逐个登录员工的个人账号查看用量",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s18",
+  "type": "single",
+  "no": 18,
+  "text": "某客户的市场专员需要为周末的线下促销活动快速产出一张活动海报，没有设计基础，希望直接用 WorkBuddy 生成。讲师应介绍哪项内置技能？",
+  "options": [
+   {
+    "key": "A",
+    "text": "PPT 制作，根据数据生成汇报演示文稿",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "自动化报表，合并多份 Excel 并输出图表报告",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "海报生成，根据需求生成活动海报",
+    "note": "选这个"
+   },
+   {
+    "key": "D",
+    "text": "文件整理，整理 Downloads 文件夹里的图片按日期分类",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s19",
+  "type": "single",
+  "no": 19,
+  "text": "员工对未信任的工作区选择「以受限模式打开」后，下列说法正确的是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "仍可浏览、搜索和编辑文件，但 WorkBuddy 不扫描或运行工作区配置目录下的文件，不自动加载其中的设置、规则、命令或脚本",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "工作区立即被只读锁定，任何文件都无法编辑",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "工作区会被整体隔离 24 小时，之后自动转为信任",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "受限模式下无法使用对话功能",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s20",
+  "type": "single",
+  "no": 20,
+  "text": "销售问客户：\"咱们这个项目大概要拉几个人一起用？\"客户答：\"十四五个人吧。\"按照支点1\"10人硬顶\"，销售的正确说法是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "\"个人版最多的一个档，单个项目协作人数上限是10人，第11个人就进不去了——这不是钱的问题，这是走不通\"",
+    "note": "⭐ 改选这个"
+   },
+   {
+    "key": "B",
+    "text": "\"企业版AI更聪明，所以能支持更多人\"",
+    "note": "⚠️ 至少不是这个（典型错误话术陷阱）"
+   },
+   {
+    "key": "C",
+    "text": "\"把项目拆成两个，分别用两个个人旗舰版账号\"",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "\"先让10个人用，其余的人排队等名额\"",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": false,
+   "recommended": true,
+   "hot": false
+  },
+  "anchor": "十四五人：支点1=10人硬顶，「第11人进不去——不是钱的问题，是走不通」"
+ },
+ {
+  "id": "s21",
+  "type": "single",
+  "no": 21,
+  "text": "客户 IT 负责人问：「AI 与我们内部系统对接时，怎么保证连接身份不被伪造？」关于 WorkBuddy 安全通信网关的正确回答是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "安全通信网关支持 Gateway Token 认证与连接鉴权，配合 SSO/企业认证及 Role 权限控制，确保每一次连接都经过严格验证",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "连接不做鉴权，完全靠内网物理隔离保证安全",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "仅靠账号密码登录，无其他验证机制",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "每次连接都需要人工电话确认后才放行",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s22",
+  "type": "single",
+  "no": 22,
+  "text": "客户说：\"我们先买 10 个坐席试试水，反正账号随便注册，我们 30 个同事都能登录用，对吧？\"下列讲师的纠正与促单讲法正确的是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "告诉客户 10 个许可证可供 30 人轮流使用，只要不是同时在线就没有任何限制",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "告诉客户企业拥有的许可证数量决定了当前企业有多少用户可以同时使用 WorkBuddy 产品——10 个坐席只支持 10 人同时使用；30 位同事都要用，建议按实际使用人数配置席位，后续也可以根据实际情况扩容",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "告诉客户 10 个坐席每月共有 20,000 Credits 团队共享，30 人分着用完全够了，不需要加购席位",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "告诉客户 30 人同时使用必须购买企业专享版，100 个坐席起购，316 元/人/月",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s23",
+  "type": "single",
+  "no": 23,
+  "text": "客户说「我们已经有 AI 对话工具了，不就是聊聊天、给点建议吗」。针对这一认知，讲师最恰当的回应是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "传统 AI 对话只能对话、提供建议，WorkBuddy 能够实际执行任务，并交付可验收的结果",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "WorkBuddy 与传统 AI 对话一样，主要价值是把文字回复写得更长",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "WorkBuddy 同样需要用户手动操作文件，只是界面更好看",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "WorkBuddy 与传统 AI 对话一样，只擅长单步骤简单任务",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": true
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s24",
+  "type": "single",
+  "no": 24,
+  "text": "客户认可自动化的价值，但表示不会写提示词，不想从零开始配置定时任务。讲师应展示什么？",
+  "options": [
+   {
+    "key": "A",
+    "text": "只能自己从零编写提示词，系统不提供任何模板",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "让 WorkBuddy 先创建一个专家团代写提示词",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "直接使用任务模板，覆盖新闻推送、周报生成、体检预约、学习计划等常见场景，选择后按需修改即可",
+    "note": "选这个"
+   },
+   {
+    "key": "D",
+    "text": "从灵感中收藏案例后，系统会自动生成定时规则",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s25",
+  "type": "single",
+  "no": 25,
+  "text": "某客户希望部署一个需要 7×24 小时在线值守的智能客服，并要求在无任务时自动休眠以节省成本，同时希望这些 Agent 能下发到员工的 WorkBuddy 端直接使用。最适合推荐哪款产品？",
+  "options": [
+   {
+    "key": "A",
+    "text": "CodeBuddy",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "WorkBuddy",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "WorkBuddy Managed Agents，Agent 在云端沙箱运行，适合长程任务、在线客服、自动触发任务，并可一键下发至 WorkBuddy 端",
+    "note": "选这个"
+   },
+   {
+    "key": "D",
+    "text": "腾讯混元大模型的在线接口",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s26",
+  "type": "single",
+  "no": 26,
+  "text": "向研发客户介绍 CodeBuddy 时，关于其产品形态，正确的说法是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "仅提供网页版一种形态",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "支持 IDE、插件、CLI 三种形态",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "只能以 VS Code 插件形式使用",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "必须安装独立虚拟机运行",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s27",
+  "type": "single",
+  "no": 27,
+  "text": "客户反馈 WorkBuddy 启动后被拦截、登录窗口拉不起来，怀疑是安全软件导致。正确的处理建议是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "临时退出火绒、360 安全卫士、电脑管家、Windows 安全中心后重试，WorkBuddy 常被误拦截，关闭后重试即可",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "卸载 WorkBuddy 客户端并重新下载安装最新版本",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "将网络切换为家庭网络，按官网网络排查流程逐项处理",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "登录官网从头像处进入个人主页 > 账号管理注销账号后重新注册",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": true
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s28",
+  "type": "single",
+  "no": 28,
+  "text": "客户说：\"我自己在用挺好，公司那边以后再说。\"这是分诊表里最危险的一种\"伪装的好评\"，正确的识别与应对方法是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "听到好评就满足，回CRM记一笔\"客户认可\"即可",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "识别方法是问满意度，满意度高就不用再跟了",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "立刻纠正客户\"个人版不适合公司场景\"，要求马上转企业版",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "识别方法是问人数而不是问满意度——用10人天花板测试他到底几个人在用，并制造时间压力：\"趁大家都说好用的时候提，最容易批\"",
+    "note": "选这个"
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s29",
+  "type": "single",
+  "no": 29,
+  "text": "某客户希望快速完成课题研究、竞品分析和结论整理，覆盖从资料检索、信息交叉验证到报告生成的全过程。这属于 WorkBuddy 的哪类适用场景？",
+  "options": [
+   {
+    "key": "A",
+    "text": "深度调研",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "日常办公",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "代码与应用开发",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "服务与知识",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s30",
+  "type": "single",
+  "no": 30,
+  "text": "客户在试用阶段关心账号接入方式，WorkBuddy 个人版支持哪些登录方式？",
+  "options": [
+   {
+    "key": "A",
+    "text": "仅支持微信登录",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "支持微信、手机号、邮箱、SSO 等多种登录方式",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "仅支持手机号与邮箱登录",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "仅支持 SSO 单点登录",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s31",
+  "type": "single",
+  "no": 31,
+  "text": "算完账后客户说：\"那我买标准版¥99就行了。\"按照场景B的标准应对，销售应该讲什么？",
+  "options": [
+   {
+    "key": "A",
+    "text": "标准版单项目也能加到10个人，够用了",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "标准版积分可以共享给同事，不吃亏",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "标准版也有管理后台，公司看得见用量",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "企业版多付的这99块，买的是\"管理层能看见、资产能留下、权限能收回\"这三件事——要不要买，取决于您觉得这工具是\"大家私下用用\"还是\"公司正式投产\"",
+    "note": "选这个"
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s32",
+  "type": "single",
+  "no": 32,
+  "text": "客户第一次接触 WorkBuddy，在交流中问「这个东西到底能帮我干什么」，下列介绍最准确的是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "腾讯出品的全场景 AI 工作台，用自然语言描述需求，由它自主规划和执行任务，交付文档、表格、PPT 等可直接使用的完整成果，并可连接腾讯办公生态",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "一款安装在编辑器里、专门帮程序员补全代码的 AI 编程插件",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "腾讯云提供的一站式云服务器与数据库托管服务",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "一款只能在线聊天、回答问题的通用问答机器人",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s33",
+  "type": "single",
+  "no": 33,
+  "text": "客户反馈 WorkBuddy 无法读取图片、PDF、Excel、Word 等文件，最可能的原因是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "当前模型不支持对应文件类型，或未安装相关插件与 Skill",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "请求频率受限，需要等待一段时间后再重试",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "工作空间目录未被授权，AI 无法访问任何本地文件",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "安装目录下存在用户项目目录，文件在更新时被覆盖删除",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s34",
+  "type": "single",
+  "no": 34,
+  "text": "客户使用鸿蒙 6 系统的微信扫码连接机器人时一直扫码失败，正确的答复是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "鸿蒙 6 的微信扫码当前存在不兼容情况，鸿蒙 4 可以正常连接；临时方案是先使用安卓手机完成首次扫码连接，再切换回鸿蒙微信继续使用",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "鸿蒙 4 存在不兼容，需将系统升级到鸿蒙 6 后重新扫码连接",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "需重新创建或重新填写一次 Webhook 配置，避免重复输入同一地址",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "需清除编辑器缓存，并清空 CachedExtensionVSIXs 缓存文件夹后重试",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s35",
+  "type": "single",
+  "no": 35,
+  "text": "讲师在给客户演示技能能力时提到\"自动化报表\"技能，它的效果是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "根据数据生成汇报演示文稿",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "根据需求生成活动海报",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "合并多份 Excel 并输出图表报告",
+    "note": "选这个"
+   },
+   {
+    "key": "D",
+    "text": "整理 Downloads 文件夹里的图片，按日期分类",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s36",
+  "type": "single",
+  "no": 36,
+  "text": "客户咨询私有化企业版的价格，希望直接拿到标准报价单。作为讲师，正确的回应是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "按 198 元/人/月、2,376 元/人/年报价",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "按 316 元/人/月、3,792 元/人/年报价",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "私有化版价格详情请咨询私有化企业版售前咨询",
+    "note": "选这个"
+   },
+   {
+    "key": "D",
+    "text": "私有化版与专享版同价，可直接按专享版报价",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s37",
+  "type": "single",
+  "no": 37,
+  "text": "客户问：「AI 执行命令时万一把系统搞坏了怎么办？」关于「Bash 命令沙箱」的作用，正确的说法是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "给每条命令加时间戳，方便事后追责",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "AI 操作与真实系统严格隔离，防止对系统造成破坏",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "完全禁止 AI 执行任何 Bash 命令",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "把所有命令转发给企业管理员审批后执行",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s38",
+  "type": "single",
+  "no": 38,
+  "text": "客户反馈 WorkBuddy 升级或隔天重启后，找不到原来的工作空间文件夹和历史记录了。正确的答复是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "打开文件管理器（Windows）或 Finder（Mac），进入 WorkBuddy 大文件夹（Windows：C:/Users/用户名/WorkBuddy，Mac：/Users/用户名/WorkBuddy），通过 WorkBuddy 打开以日期或用户自定义名字命名的文件夹即可找回原有历史记录",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "打开安装目录（Windows：C:\\Users\\用户名\\AppData\\Local\\Programs\\WorkBuddy，MacOS：/Applications/WorkBuddy.app），在 tools 文件夹中查找历史记录",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "进入 %APPDATA%\\CodeBuddyExtension\\Data\\Public\\auth 目录，将 auth 文件拷贝回新工作空间即可恢复",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "原文件夹已被系统清理无法找回，只能新建工作空间重新执行任务",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s39",
+  "type": "single",
+  "no": 39,
+  "text": "客户在任务列表中看到某个任务的状态显示为\"规划中\"，这表示什么？",
+  "options": [
+   {
+    "key": "A",
+    "text": "WorkBuddy 正在执行任务",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "WorkBuddy 正在分析需求并整理执行思路",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "任务等待进一步处理或输入",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "执行过程中出现问题，任务未能完成",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s40",
+  "type": "single",
+  "no": 40,
+  "text": "竞品对标课程将 WorkBuddy 的差异化优势拆解为若干「核心区隔位」。下列哪一项属于官方拆解的核心区隔位？",
+  "options": [
+   {
+    "key": "A",
+    "text": "价格全行业最低",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "企业安全管控",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "硬件终端赠送",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "无限量免费使用",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s41",
+  "type": "single",
+  "no": 41,
+  "text": "客户询问 WorkBuddy 的技能是否只能用官方内置的几种，能否把公司自己的作业流程沉淀进去。正确的介绍是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "只能使用官方内置技能，不支持任何扩展",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "WorkBuddy 内置多技能包，覆盖文档处理、数据报表、海报设计、文件整理等场景，同时兼容 OpenClaw 社区技能导入，也支持通过自然语言创建自定义技能",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "需要通过修改客户端配置文件才能新增技能",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "技能安装后无法关闭，只能卸载",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s42",
+  "type": "single",
+  "no": 42,
+  "text": "客户研发团队 150 人，要求部署在腾讯云专享 VPC，并需要使用专属企业插件，计划按年订阅。应推荐哪个版本、对应什么价格？",
+  "options": [
+   {
+    "key": "A",
+    "text": "企业旗舰版，2,376 元/人/年",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "企业专享版，3,792 元/人/年",
+    "note": "⭐ 改选这个（专享VPC+专属插件=专享版特征；316元/月×12）"
+   },
+   {
+    "key": "C",
+    "text": "企业专享版，2,376 元/人/年",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "私有化企业版，3,792 元/人/年",
+    "note": "⚠️ 至少不是这个（私有化价格要咨询，不给标准价）"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": false,
+   "recommended": true,
+   "hot": false
+  },
+  "anchor": "150人专享VPC+专属插件=企业专享版，316元/月×12=3,792元/人/年"
+ },
+ {
+  "id": "s43",
+  "type": "single",
+  "no": 43,
+  "text": "客户数据安全负责人问：「我们的数据传到服务端后会不会留存、拿去训练模型？」关于服务端数据处理原则，正确的回答是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "数据在服务端保存 180 天供审计，到期自动删除",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "服务端仅处理数据片段，用后即弃，不保存，也不用于模型训练",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "会匿名化后用于模型训练，签协议可豁免",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "数据永久保留在专属 VPC 内供随时调取",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s44",
+  "type": "single",
+  "no": 44,
+  "text": "客户问：\"我们现在用钉钉悟空（悟空+钉钉），凭什么换WorkBuddy？\"按照官方39项实测的分竞品打击话术，针对悟空+钉钉的正确表述是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "「企业管控和团队协作几乎是空白」",
+    "note": "⚠️ 至少不是这个（钉钉恰恰强在协作）"
+   },
+   {
+    "key": "B",
+    "text": "「研发味太重，职能岗用不起来」（更像打代码类竞品）",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "「只活在钉钉里，技能生态单薄」",
+    "note": "⭐ 改选这个"
+   },
+   {
+    "key": "D",
+    "text": "「模型多不等于能落地」（更像打模型聚合类竞品）",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "flags": {
+   "confirmed": false,
+   "recommended": true,
+   "hot": false
+  },
+  "anchor": "凭什么换掉悟空+钉钉：「只活在钉钉里，技能生态单薄」（A 错：钉钉恰恰强在协作）"
+ },
+ {
+  "id": "s45",
+  "type": "single",
+  "no": 45,
+  "text": "客户在采购交流中说：\"我们团队二十来人，用 AI 的程度肯定不一样——做设计的同事用得多，做行政的可能一个月都点不了几次，每人 2,000 积分，用不完的不是浪费了吗？\"下列讲师的回应最符合官方计费规则、又最有利于促成订单的是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "建议只给用量大的员工开通坐席，用得少的同事先不开通，避免积分浪费",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "告诉客户积分消耗量由模型类型、Token 用量及任务复杂度共同决定，让行政同事少用高级模型就能省下积分",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "告诉客户企业版的积分是团队内共享的：每个坐席每月 2,000 Credits 汇入共享池，轻度使用的成员用不完的积分，可以被重度使用的同事用起来，且对话问答不限频——席位越多共享池越大，同样的钱利用率更高",
+    "note": "选这个"
+   },
+   {
+    "key": "D",
+    "text": "建议客户先给每人买个人版，个人版积分记在各自名下互不影响，等团队扩大后再考虑企业版",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s46",
+  "type": "single",
+  "no": 46,
+  "text": "关于 WorkBuddy 的数据传输安全保障，正确的说法是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "所有数据传输采用 HTTPS 全链路加密，支持 TLS 1.2/1.3 加密协议，防窃听、篡改和中间人攻击",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "数据只在企业内网传输，不经公网",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "采用自研二进制协议，不兼容 TLS",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "仅登录环节加密，任务数据明文传输",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s47",
+  "type": "single",
+  "no": 47,
+  "text": "客户关注每位员工的文件存储空间，询问旗舰版内置腾讯网盘的容量。正确的是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "企业文件存储与共享，每席 50G",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "企业文件存储与共享，每席 500G",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "Ardot 草稿文件无限量",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "无存储容量限制",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s48",
+  "type": "single",
+  "no": 48,
+  "text": "客户问：\"我们团队用得比较狠，每个月赠送的积分如果不够用了怎么办？是不是只能升级更贵的版本？\"下列讲师的回应正确的是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "告诉客户积分不够只能整体升级为企业专享版，316 元/人/月，100 个坐席起购",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "告诉客户企业旗舰版、企业专享版可以根据需求购买加量包补充用量（如 245 元购 5,000 Credits，有效期 6 个月），不需要升级版本；且系统会优先使用最先到期的积分",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "告诉客户加量包长期有效，买回来可以慢慢用，不用担心过期",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "告诉客户 2026 年 3 月 11 日前购买的加量包有效期同样是 6 个月，早买更划算",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s49",
+  "type": "single",
+  "no": 49,
+  "text": "新销售小李打算跟客户说：\"企业版功能更强大、AI更聪明，所以更贵。\"按照红线清单，这一说法错在哪？",
+  "options": [
+   {
+    "key": "A",
+    "text": "没错，这是官网标准口径",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "错在价格说反了，企业版其实更便宜",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "错在可以这么说，但必须加一句\"个人版也够用\"",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "官网口径里全模型可选、无限代码补全、跨文件理解、自动任务这些核心AI能力个人版旗舰版全都有，客户去官网一比就穿帮；正确说法是企业版多的是治理能力，不是\"更聪明的模型\"",
+    "note": "选这个"
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s50",
+  "type": "single",
+  "no": 50,
+  "text": "临门一脚时客户说\"我再想想\"。按照场景F，销售的收尾方式应该是什么？",
+  "options": [
+   {
+    "key": "A",
+    "text": "问\"您觉得我们产品怎么样？\"引导客户表态",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "发一份报价单，然后等客户主动联系",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "永远不要在\"买不买\"上收尾——问两个问题：\"先给谁开通？什么时候给他们开通？\"这两个问题一旦被回答，单子就已经在流程里了",
+    "note": "选这个"
+   },
+   {
+    "key": "D",
+    "text": "直接问\"您是微信支付还是对公转账？\"",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s51",
+  "type": "single",
+  "no": 51,
+  "text": "一位 Mac 用户反馈单击 WorkBuddy 后无反应，无法拉起登录验证窗口。应指导其如何处理？",
+  "options": [
+   {
+    "key": "A",
+    "text": "删除应用后重新下载安装包",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "单击系统偏好设置 > 通用，将默认浏览器设为 Chrome 或 Safari，重启应用后重新登录",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "切换到完全访问权限模式后重新登录",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "在自动化页面新建任务即可触发登录",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s52",
+  "type": "single",
+  "no": 52,
+  "text": "客户向 WorkBuddy 下发整理桌面指令后，桌面完成整理但部分文件疑似丢失。应建议客户优先检查哪里？",
+  "options": [
+   {
+    "key": "A",
+    "text": "目标整理目录与回收站",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "安装目录下的 tools 文件夹",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "帮助 > 打开日志文件夹中的日志 zip 包",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "%APPDATA%\\CodeBuddyExtension\\Data\\Public\\auth 目录",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s53",
+  "type": "single",
+  "no": 53,
+  "text": "Mac 客户登录 WorkBuddy 一直失败，怀疑是账号文件夹权限问题。下列排查与授权操作中，符合官方建议的是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "在终端执行 ls -la ~/Library/Application\\ Support/CodeBuddyExtension/ 等命令确认目录 owner，若不是当前用户（可用 whoami 确认），则执行 sudo chown -R $(whoami) ~/Library/Application\\ Support/CodeBuddyExtension 授权，退出并重新打开完成登录",
+    "note": "选这个"
+   },
+   {
+    "key": "B",
+    "text": "在终端执行 takeown /F \"$env:APPDATA\\CodeBuddyExtension\" /R /D Y，再用 icacls 为当前用户授予完全控制权限（这是 Windows 命令）",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "在 IDE 设置中搜索 gallery，将地址配置为 https://marketplace.visualstudio.com 后重启",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "将 Editor › General › Console 路径下的 Default Encoding 设置为 GBK 后重新登录",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s54",
+  "type": "single",
+  "no": 54,
+  "text": "某客户是一家 15 人的初创研发团队，希望先小范围试用、按人数订阅、控制初期投入，且希望 1 人即可起购。作为讲师，应优先推荐哪个版本？",
+  "options": [
+   {
+    "key": "A",
+    "text": "企业旗舰版",
+    "note": "选这个（1 人起购、按人数订阅）"
+   },
+   {
+    "key": "B",
+    "text": "企业专享版",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "私有化企业版",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "三个版本均需 100 人起购，该客户无法采购",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s55",
+  "type": "single",
+  "no": 55,
+  "text": "某金融行业客户提出数据不出企业、系统需完全落在企业自有环境中，由企业自主运维。应推荐哪个版本？",
+  "options": [
+   {
+    "key": "A",
+    "text": "企业旗舰版，部署方式为腾讯云共享 VPC",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "企业专享版，部署方式为腾讯云专享 VPC",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "私有化企业版，部署方式为企业私有化",
+    "note": "选这个"
+   },
+   {
+    "key": "D",
+    "text": "企业旗舰版，部署方式为企业私有化",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "s56",
+  "type": "single",
+  "no": 56,
+  "text": "客户已将腾讯文档连接到 WorkBuddy，记得里面存过一份\"渠道返利政策\"相关文档，但想不起确切文件名。讲师应告知其最快的查找方式是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "只能在资料库右上方的搜索框输入完整文件名关键词查找",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "新建任务，用自然语言描述需要的文档即可找到",
+    "note": "选这个"
+   },
+   {
+    "key": "C",
+    "text": "必须先手动把文档整理到同一文件夹，再用全部文件视图逐个查看",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "使用\"添加到任务\"把所有文档逐个加入任务，让 WorkBuddy 逐一确认",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m1",
+  "type": "multiple",
+  "no": 1,
+  "text": "WorkBuddy 安全体系「合规审计层」包含以下哪些措施？",
+  "options": [
+   {
+    "key": "A",
+    "text": "Skill 安全审计（与安全团队联动，分级风险判别）",
+    "note": "保留"
+   },
+   {
+    "key": "B",
+    "text": "skill-scanner 本地安全检查",
+    "note": "保留"
+   },
+   {
+    "key": "C",
+    "text": "数据本地执行不上传",
+    "note": "⭐ 补上这个"
+   },
+   {
+    "key": "D",
+    "text": "将用户数据用于模型训练以持续优化效果",
+    "note": "明显错误项，永远不选"
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C"
+  ],
+  "flags": {
+   "confirmed": false,
+   "recommended": true,
+   "hot": false
+  },
+  "anchor": "合规审计层：补上「数据本地执行不上传」；「数据用于训练」永远不选"
+ },
+ {
+  "id": "m2",
+  "type": "multiple",
+  "no": 2,
+  "text": "客户希望 WorkBuddy 更懂自家业务、能力可持续扩展。关于 WorkBuddy 的扩展机制，下列说法正确的有？",
+  "options": [
+   {
+    "key": "A",
+    "text": "通过专家复用专业知识与工作方法，完成分析、创作和专业处理任务",
+    "note": "保留"
+   },
+   {
+    "key": "B",
+    "text": "通过连接器使用企业内部沉淀的知识为任务提供支撑",
+    "note": "⚠️ 连接器≠内部知识"
+   },
+   {
+    "key": "C",
+    "text": "通过连接器访问外部服务，为任务提供数据和知识支持",
+    "note": "⭐ 补上这个"
+   },
+   {
+    "key": "D",
+    "text": "通过资料库使用内部知识，为任务提供数据和知识支持",
+    "note": "保留"
+   }
+  ],
+  "answer": [
+   "A",
+   "C",
+   "D"
+  ],
+  "flags": {
+   "confirmed": false,
+   "recommended": true,
+   "hot": false
+  },
+  "anchor": "扩展机制：连接器=外部服务、资料库=内部知识；B 张冠李戴"
+ },
+ {
+  "id": "m3",
+  "type": "multiple",
+  "no": 3,
+  "text": "右侧边栏是 WorkBuddy 的产物查看与文件管理面板，它包含以下哪些标签？",
+  "options": [
+   {
+    "key": "A",
+    "text": "产物 ✓",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "工作空间文件 ✓",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "变更 ✓",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "专家 ✗（不选）",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": true
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m4",
+  "type": "multiple",
+  "no": 4,
+  "text": "客户采购企业旗舰版后，其企业管理能力包含以下哪些项？",
+  "options": [
+   {
+    "key": "A",
+    "text": "授权管理 ✓",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "单点登录 ✓",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "研效看板 ✓",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "专属企业插件 ✗（不选——版本权益，非治理能力，对应判断题「旗舰版含专属插件=错」）",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m5",
+  "type": "multiple",
+  "no": 5,
+  "text": "WorkBuddy 安全体系「技术防御层」包含以下哪些机制？",
+  "options": [
+   {
+    "key": "A",
+    "text": "Bash 命令沙箱 ✓",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "文件系统隔离 ✓",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "每月强制更换用户密码 ✗（不选）",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "防沙箱逃逸 ✓",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "D"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": true
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m6",
+  "type": "multiple",
+  "no": 6,
+  "text": "关于默认权限与完全访问权限，下列说法正确的有？",
+  "options": [
+   {
+    "key": "A",
+    "text": "在新建任务输入框下方，单击默认权限下拉菜单，可以开启或关闭允许完全访问权限 ✓",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "默认权限下，写入或修改工作空间外的文件、删除文件或目录、执行脚本命令或外部程序时，会先弹出二次确认 ✓",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "在隔离目录里反复运行可信脚本时，可以短时间开启完全放开 ✓",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "完全访问权限会自动判断所有风险，比默认权限更安全，适合日常长期使用 ✗（反话陷阱）",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m7",
+  "type": "multiple",
+  "no": 7,
+  "text": "按照打单课程挖需求阶段的\"前期三板斧\"（Gap Selling），销售开场应挖出的内容包括哪些？",
+  "options": [
+   {
+    "key": "A",
+    "text": "最耗时最痛的重复场景（现状）——无具体场景等于伪需求 ✓",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "谁拍板、谁参与（权力）——错认决策人就永远卡在\"帮您问问\" ✓",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "为什么是现在+预算信号（紧迫感）——预算异议90%不是\"没钱\"是\"值不值\" ✓",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "客户公司的实缴资本与招投标情况 ✗（不选）",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m8",
+  "type": "multiple",
+  "no": 8,
+  "text": "客户在安全评审中提出四项顾虑：①数据被用于模型训练；②员工私自安装带风险的 Skill；③外部网络随意登录；④传输过程被窃听。下列「顾虑 → WorkBuddy 对应能力」的匹配，正确的有？",
+  "options": [
+   {
+    "key": "A",
+    "text": "① → 服务端仅处理数据片段，用后即弃，不保存，不用于模型训练 ✓",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "② → skill-scanner 安装前本地安全检查，企业可建立获准 Skills 清单 ✓",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "③ → IP 白名单，限制特定 IP 段设备登录 ✓",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "④ → HTTPS 全链路加密，支持 TLS 1.2/1.3 ✓",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m9",
+  "type": "multiple",
+  "no": 9,
+  "text": "客户在默认权限下工作时弹出二次确认弹窗，担心看不懂弹窗、误放行高风险操作。讲师应提醒客户重点核对哪些内容？",
+  "options": [
+   {
+    "key": "A",
+    "text": "操作内容：是写文件、删文件，还是执行脚本",
+    "note": "保留"
+   },
+   {
+    "key": "B",
+    "text": "影响范围：目标路径是否在本次任务的工作空间内，是否会影响桌面、下载目录、项目源码或其它重要目录",
+    "note": "保留"
+   },
+   {
+    "key": "C",
+    "text": "弹窗频率：确认次数越少说明任务越安全",
+    "note": "反话陷阱，不选"
+   },
+   {
+    "key": "D",
+    "text": "执行理由：这一步是否确实是完成任务所必需的",
+    "note": "⭐ 补上这个"
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "D"
+  ],
+  "flags": {
+   "confirmed": false,
+   "recommended": true,
+   "hot": false
+  },
+  "anchor": "二次确认弹窗核对：补「执行理由」；「确认次数越少越安全」是反话"
+ },
+ {
+  "id": "m10",
+  "type": "multiple",
+  "no": 10,
+  "text": "客户希望给 WorkBuddy 添加新技能，讲师可以演示哪些添加技能的方式？",
+  "options": [
+   {
+    "key": "A",
+    "text": "技能只能使用官方内置的，无法自行添加 ✗（不选）",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "上传技能：导入本地技能包，导入后系统自动完成配置，无需额外操作 ✓",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "查找技能：输入任务描述，WorkBuddy 自动查找相关技能 ✓",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "创建技能：输入任务描述，WorkBuddy 自动创建相关技能 ✓",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "B",
+   "C",
+   "D"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m11",
+  "type": "multiple",
+  "no": 11,
+  "text": "旗舰版内置的腾讯文档，其可升级权益包含以下哪些内容？",
+  "options": [
+   {
+    "key": "A",
+    "text": "安全管控增强（支持水印、文档审计、回收站时长 7 → 180 天）",
+    "note": "保留"
+   },
+   {
+    "key": "B",
+    "text": "表格 2000 行 → 4 万行，表格自动化次数 100 → 5 万次/人",
+    "note": "保留"
+   },
+   {
+    "key": "C",
+    "text": "企业个性化与系统集成",
+    "note": "⭐ 补上这个"
+   },
+   {
+    "key": "D",
+    "text": "知识治理（有效期、知识反馈、评审、巡检、事实核验、重复检测）",
+    "note": "⚠️ 这是乐享知识库的功能，不属于腾讯文档"
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C"
+  ],
+  "flags": {
+   "confirmed": false,
+   "recommended": true,
+   "hot": false
+  },
+  "anchor": "腾讯文档可升级权益：补「企业个性化与系统集成」；D 知识治理属于乐享知识库"
+ },
+ {
+  "id": "m12",
+  "type": "multiple",
+  "no": 12,
+  "text": "讲师给客户做上手培训时，以下哪些做法符合官方推荐的上手技巧？",
+  "options": [
+   {
+    "key": "A",
+    "text": "用\"做什么 + 有什么 + 怎么样\"把任务目标说清楚，别让 AI 猜意图 ✓",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "把大任务拆成独立的小目标，一次只推进一步 ✓",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "让 WorkBuddy 修改重要文档、方案、表格前，先复制一份备份 ✓",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "把所有工作都塞进同一个会话，避免开新任务造成上下文丢失 ✗",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m13",
+  "type": "multiple",
+  "no": 13,
+  "text": "插件登录时网络通信异常，显示设备连不上代码助手域名。下列排查手段中符合官方建议的是？",
+  "options": [
+   {
+    "key": "A",
+    "text": "重启 IDE 重新登录，并检查网络连接是否正常 ✓",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "SaaS 环境可打开腾讯云-华佗诊断，输入域名 copilot.tencent.com 后进行检测 ✓",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "检查是否有系统代理干扰、防火墙连接是否正常，以及 host 配置是否存在异常干扰 ✓",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "卸载插件并更换为其他 IDE，重新购买企业版套餐后使用 ✗",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m14",
+  "type": "multiple",
+  "no": 14,
+  "text": "客户问：\"你们企业版号称治理能力强，具体能管什么？\"按照企业版7大治理能力清单，下列哪些属于其中？",
+  "options": [
+   {
+    "key": "A",
+    "text": "SSO（单点登录） ✓",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "审计日志 ✓",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "IP白名单 ✓",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "专属企业插件 ✗（选项自己都注明了：版本权益，非治理能力）",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m15",
+  "type": "multiple",
+  "no": 15,
+  "text": "客户计划为研发、办公、IT 部门统一采购 AI 能力。关于 WorkBuddy Enterprise 三款产品的组合价值，下列说法正确的有？",
+  "options": [
+   {
+    "key": "A",
+    "text": "三款产品既可独立使用，也可在企业内统一管理与协同 ✓",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "三款产品覆盖从编码、办公到智能体运营的一体化闭环 ✓",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "Managed Agents 的云端 Agent 可下发至员工 WorkBuddy 端直接使用 ✓",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "三款产品必须整体捆绑采购，无法按需单独购买 ✗",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m16",
+  "type": "multiple",
+  "no": 16,
+  "text": "WorkBuddy Managed Agents 的全流程 Agent 生命周期治理包含以下哪些内容？",
+  "options": [
+   {
+    "key": "A",
+    "text": "统一身份 ✓",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "独立运行环境 ✓",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "全链路 Trace ✓",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "效果评测与持续优化 ✓",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m17",
+  "type": "multiple",
+  "no": 17,
+  "text": "客户已连接腾讯文档，讲师在演示时可以展示哪些能力？",
+  "options": [
+   {
+    "key": "A",
+    "text": "在资料库中通过关键词搜索文件，资料库支持按文档标题和按文档所有者两种检索方式 ✓",
+    "note": ""
+   },
+   {
+    "key": "B",
+    "text": "在资料库中选中对应文件后单击\"添加到任务\"，让 WorkBuddy 处理该文件 ✓",
+    "note": ""
+   },
+   {
+    "key": "C",
+    "text": "把本地 Word、Excel、PPT、PDF 等文件在资料库中勾选并添加到任务 ✓",
+    "note": ""
+   },
+   {
+    "key": "D",
+    "text": "在左侧边栏单击自动化图标进入并授权腾讯文档 ✗（授权不在自动化入口）",
+    "note": ""
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "m18",
+  "type": "multiple",
+  "no": 18,
+  "text": "企业旗舰版 10 坐席扩容到 20 坐席促单，下列说法符合官方计费规则、又有利于促成扩容的有？",
+  "options": [
+   {
+    "key": "A",
+    "text": "扩到 20 坐席后，企业每月的月固定用量将增加到 20 × 2,000 合计 40,000 Credits，全部汇入团队内共享使用的积分池",
+    "note": "保留"
+   },
+   {
+    "key": "B",
+    "text": "扩容后每个坐席仍是 2,000 Credits/月、每月刷新、团队内共享、对话问答不限频——轻度使用的同事用不完的积分，可以被重度使用的同事用起来",
+    "note": "保留"
+   },
+   {
+    "key": "C",
+    "text": "2026 年 5 月 15 日至 8 月 14 日期间办理扩容，同样可以享受首月每个坐席额外赠送 2,000 Credits 的权益",
+    "note": "⭐可疑（活动期可能已过，临场看题面）"
+   },
+   {
+    "key": "D",
+    "text": "扩容后即使企业版到期，已购加量包的剩余用量仍可继续独立使用，团队不会断粮",
+    "note": "⚠️ 与加量包 6 个月有效期规则矛盾，大概率错"
+   }
+  ],
+  "answer": [
+   "A",
+   "B"
+  ],
+  "flags": {
+   "confirmed": false,
+   "recommended": true,
+   "hot": false
+  },
+  "anchor": "扩容促单：D「到期后加量包继续独立用」与 6 个月有效期矛盾；C 活动期已过"
+ },
+ {
+  "id": "b1",
+  "type": "bool",
+  "no": 1,
+  "text": "按照官方39项实测，WorkBuddy 30项领先六家竞品，整体身位领先2-3个月。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "对"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b2",
+  "type": "bool",
+  "no": 2,
+  "text": "企业旗舰版、企业专享版、私有化企业版的部署方式不同，分别为腾讯云共享 VPC、腾讯云专享 VPC、企业私有化。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "对"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b3",
+  "type": "bool",
+  "no": 3,
+  "text": "专家本身不主动获取系统权限，仅处理用户主动提供的对话与上传文件；当配备 Skill / MCP 时才会在用户授权下间接访问文件或外部服务。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "对"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b4",
+  "type": "bool",
+  "no": 4,
+  "text": "「WorkBuddy 的分层权限系统仅支持 allow（允许）和 deny（拒绝）两种规则，不提供中间确认机制」——错，有二次确认机制。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "错"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b5",
+  "type": "bool",
+  "no": 5,
+  "text": "WorkBuddy 构建了完善的企业级安全体系，采用三层纵深防御安全架构：技术防御层、管理管控层、合规审计层。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "对"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b6",
+  "type": "bool",
+  "no": 6,
+  "text": "「CodeBuddy 只支持 Python、Java 等少数编程语言，其他技术栈无法使用」——错误。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "错"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b7",
+  "type": "bool",
+  "no": 7,
+  "text": "「建议一次性启用所有可用技能，启用的技能越多，WorkBuddy 的能力就越强」——不符合官方推荐做法。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "错"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b8",
+  "type": "bool",
+  "no": 8,
+  "text": "WorkBuddy Managed Agents 提供云端托管的智能体运行服务，Agent 在云端沙箱运行，可 7×24 小时不间断服务，特别适合长程任务、在线客服、自动触发任务等场景。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "对"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": true
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b9",
+  "type": "bool",
+  "no": 9,
+  "text": "「企业旗舰版的企业管理能力已包含专属网络访问与专属企业插件」——错误。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "错"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b10",
+  "type": "bool",
+  "no": 10,
+  "text": "客户反馈 WorkBuddy 出现 14003、11133、1001 报错时，应告知客户这些错误码多与模型侧状态有关，建议优先切换模型重试，但该方法可能仅能临时缓解。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "对"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b11",
+  "type": "bool",
+  "no": 11,
+  "text": "面对金融、政企等对数据隔离要求极高的客户，销售可推荐专有云VPC版（¥316/人/月），其核心差异化价值是物理隔离。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "对"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b12",
+  "type": "bool",
+  "no": 12,
+  "text": "「新建自动化任务无需试运行，直接以高频率正式执行即可，出错再改也来得及」——不符合官方推荐（应先试运行）。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "错"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b13",
+  "type": "bool",
+  "no": 13,
+  "text": "助理支持通过微信、企业微信、QQ、钉钉、飞书等即时通讯平台，远程控制电脑上的 WorkBuddy 执行任务。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "对"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b14",
+  "type": "bool",
+  "no": 14,
+  "text": "专家团会并行调用多位专家、涉及多轮模型交互，积分消耗通常为单专家的 3–5 倍。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "对"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b15",
+  "type": "bool",
+  "no": 15,
+  "text": "「助理和连接器是一回事，都是企业自建的agent」——错误。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "错"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b16",
+  "type": "bool",
+  "no": 16,
+  "text": "「CodeBuddy 可提供实时的团队开发提效效果数据和全面的研发投入数据依据，帮助管理者进行人效管理」——正确。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "对"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b17",
+  "type": "bool",
+  "no": 17,
+  "text": "「企业版包含个人版全部能力，这是官网明写的」——不符合官方口径。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "错"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b18",
+  "type": "bool",
+  "no": 18,
+  "text": "「我下班关机后，通过助理下发的远程任务还能继续在云端执行吗？」——不能。使用助理时，为保证任务顺利执行，电脑需要保持开机并运行 WorkBuddy。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "对"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ },
+ {
+  "id": "b19",
+  "type": "bool",
+  "no": 19,
+  "text": "「私有化企业版与企业专享版一样，均为赠送 2000 Credits/人、每月刷新的用量限制规则」——错误。",
+  "options": [
+   {
+    "key": "对",
+    "text": ""
+   },
+   {
+    "key": "错",
+    "text": ""
+   }
+  ],
+  "answer": [
+   "错"
+  ],
+  "flags": {
+   "confirmed": true,
+   "recommended": false,
+   "hot": false
+  },
+  "anchor": ""
+ }
+];
+</script>
+<script>
+"use strict";
+const TYPE_LABEL={single:"单选",multiple:"多选",bool:"判断"};
+const WEIGHT={single:2,multiple:3,bool:1};
+const STORE_KEY="wb_exam_wrongbook_v1";
+
+/* ---------- storage ---------- */
+function loadWrong(){try{return JSON.parse(localStorage.getItem(STORE_KEY))||[]}catch(e){return[]}}
+function saveWrong(a){try{localStorage.setItem(STORE_KEY,JSON.stringify(a))}catch(e){}}
+function isWrong(id){return loadWrong().includes(id)}
+function toggleWrong(id){let a=loadWrong();if(a.includes(id))a=a.filter(x=>x!==id);else a.push(id);saveWrong(a);return a.includes(id)}
+function clearWrong(){saveWrong([])}
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function cleanNote(s){return String(s||"").replace(/[⭐🔥⚠️✅]/g,"").replace(/^[\s·]+/,"").trim();}
+const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+const $view=document.getElementById("view");
+const $back=document.getElementById("backBtn");
+const $topTitle=document.getElementById("topTitle");
+const $topRight=document.getElementById("topRight");
+
+const CHEV='<svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>';
+
+let state={view:"home",back:"home"};
+
+function setBar(title,right){
+  $topTitle.textContent=title||"";
+  $topRight.innerHTML=right||"";
+  $back.classList.toggle("hidden",state.view==="home");
+}
+function go(view,back){
+  state.view=view;state.back=back||"home";
+  window.scrollTo(0,0);
+  render();
+}
+
+/* ---------- explanation builder ---------- */
+function buildExplanation(q){
+  let h="";
+  const ansHtml=q.answer.map(k=>{
+    const o=q.options.find(o=>o.key===k);
+    return '<span class="ans-key">'+k+'</span>'+(o?esc(o.text):"");
+  }).join(q.type==="multiple"?"　":"");
+  h+='<div class="ex-ans"><span class="ex-label">正确答案</span>'+ansHtml+'</div>';
+  if(q.anchor){h+='<div class="ex-anchor"><span class="ex-label">锚点</span>'+esc(q.anchor)+'</div>';}
+  const notes=q.options.filter(o=>{
+    if(!o.note)return false;
+    const c=cleanNote(o.note);
+    if(["保留","选这个","改选这个",""].includes(c))return false;
+    return /至少不是|错|可疑|矛盾|张冠李戴|反话|不选|陷阱|硬顶|错：|错,/.test(c);
+  });
+  if(notes.length){
+    h+='<div class="ex-notes">';
+    notes.forEach(o=>{h+='<div class="ex-note"><span class="ex-x">×</span><b>'+o.key+'</b>　'+esc(cleanNote(o.note))+'</div>';});
+    h+='</div>';
+  }
+  return h;
+}
+
+/* ---------- flag tags ---------- */
+function flagTags(q){
+  let h="";
+  if(q.flags&&q.flags.hot)h+='<span class="tag hot">高频必背</span>';
+  if(q.flags&&q.flags.recommended)h+='<span class="tag rec">推荐答案</span>';
+  return h;
+}
+
+/* =========================================================
+   HOME
+========================================================= */
+function renderHome(){
+  setBar("讲师认证题库自测","");
+  const wc=loadWrong().length;
+  const guide = fine
+    ? '键盘引导：数字 <b>1–4</b> 选择选项，<b>空格</b> 翻面看解析，<b>回车 / →</b> 下一题，<b>←</b> 上一题。'
+    : '轻点选项作答，轻点「显示解析」翻面看答案与讲解。上下滑动浏览，底部按钮翻页。';
+  $view.innerHTML=
+    '<section class="hero">'+
+      '<div class="kicker">WorkBuddy 讲师认证</div>'+
+      '<h1 class="hero-title">题库自测</h1>'+
+      '<p class="hero-sub">两卷去重 93 题 · 单选 56 · 多选 18 · 判断 19。随机抽题，实锤与推荐答案均已标注。</p>'+
+    '</section>'+
+    '<div class="rule"></div>'+
+    modeRow("memorize","背题模式","逐题浏览，轻点翻面看答案与解析，可随手加入错题本")+
+    modeRow("exam","真实答题","按真实考试结构抽题、计时、判分，错题自动入库")+
+    modeRow("wrong","错题本","集中复习答错的题，可重做、可移除"+(wc?'<span class="mode-badge">'+wc+'</span>':''))+
+    modeRow("notes","备考要点","价格数字锚点与临场执行清单，开考前速记")+
+    '<div class="guide">'+guide+'<br><br>本页纯本地运行，数据存在浏览器内，清空缓存会丢失错题本。微信内可直接打开使用。</div>';
+}
+function modeRow(view,name,desc){
+  return '<button class="mode-row" data-go="'+view+'"><div class="mode-main"><div class="mode-name">'+name+'</div><div class="mode-desc">'+desc+'</div></div>'+CHEV+'</button>';
+}
+
+/* =========================================================
+   MEMORIZE (背题)
+========================================================= */
+let memo={list:[],idx:0,revealed:false,filter:"all"};
+function memoFiltered(){
+  if(memo.filter==="all")return QUESTIONS.slice();
+  return QUESTIONS.filter(q=>q.type===memo.filter);
+}
+function renderMemorize(){
+  setBar("背题模式",'<span id="mCount"></span>');
+  const list=memoFiltered();
+  $view.innerHTML=
+    '<div class="filterbar" id="memoFilter">'+
+      segBtn("all","全部")+segBtn("single","单选")+segBtn("multiple","多选")+segBtn("bool","判断")+
+    '</div>'+
+    '<div id="memoBody"></div>';
+  document.querySelectorAll("#memoFilter button").forEach(b=>{
+    b.onclick=()=>{memo.filter=b.dataset.f;memo.idx=0;memo.revealed=false;renderMemorize();};
+  });
+  document.getElementById("mCount").textContent=list.length+" 题";
+  renderMemoBody();
+}
+function segBtn(f,label){
+  return '<button data-f="'+f+'" class="'+(memo.filter===f?"on":"")+'">'+label+'</button>';
+}
+function renderMemoBody(){
+  const list=memoFiltered();
+  if(!list.length){document.getElementById("memoBody").innerHTML='<div class="empty"><div class="et">暂无题目</div></div>';return;}
+  memo.idx=Math.max(0,Math.min(memo.idx,list.length-1));
+  const q=list[memo.idx];
+  const total=list.length;
+  const saved=isWrong(q.id);
+  let h='<div class="qmeta"><span class="t">'+TYPE_LABEL[q.type]+' · 第 '+(memo.idx+1)+' / '+total+' 题</span>'+flagTags(q)+'</div>';
+  h+='<div class="qtext">'+esc(q.text)+'</div>';
+  h+='<div class="opts">'+q.options.map(o=>'<div class="opt"><span class="lk">'+o.key+'</span><span class="lt">'+esc(o.text)+'</span></div>').join("")+'</div>';
+  if(memo.revealed){
+    h+='<div class="answer">'+buildExplanation(q)+'</div>';
+    h+='<div class="navrow">'+
+        '<button class="btn" id="mPrev">上一题</button>'+
+        '<button class="btn '+(saved?"on-saved":"")+'" id="mSave">'+(saved?"已入错题本":"加入错题本")+'</button>'+
+        '<button class="btn primary" id="mNext">下一题</button>'+
+      '</div>';
+  }else{
+    h+='<button class="reveal-btn" id="mReveal">显示解析</button>';
+    h+='<div class="navrow"><button class="btn" id="mPrev">上一题</button><button class="btn primary" id="mNext">下一题</button></div>';
+    if(fine)h+='<div class="kbd-hint">空格 翻面 · ← → 翻页</div>';
+  }
+  const body=document.getElementById("memoBody");
+  body.innerHTML=h;
+  const prev=document.getElementById("mPrev"),next=document.getElementById("mNext");
+  prev.onclick=()=>{memo.idx--;memo.revealed=false;renderMemoBody();window.scrollTo(0,0);};
+  next.onclick=()=>{memo.idx++;memo.revealed=false;renderMemoBody();window.scrollTo(0,0);};
+  if(memo.revealed){
+    document.getElementById("mSave").onclick=()=>{
+      const now=toggleWrong(q.id);
+      toast(now?"已加入错题本":"已移出错题本");
+      renderMemorize();
+    };
+  }else{
+    document.getElementById("mReveal").onclick=()=>{memo.revealed=true;renderMemoBody();};
+  }
+  prev.disabled=memo.idx===0;
+  next.disabled=memo.idx===total-1;
+}
+
+/* =========================================================
+   EXAM CONFIG (真实答题)
+========================================================= */
+let examCfg={range:"all",qty:"all",timer:false};
+function renderExamConfig(){
+  setBar("真实答题","");
+  const rangeSeg=segExam("range",[["all","全部"],["single","单选"],["multiple","多选"],["bool","判断"]],examCfg.range);
+  const qtySeg=segExam("qty",[["all","全部"],["sim50","模拟50"],["30","30题"],["20","20题"]],examCfg.qty);
+  const timerSeg=segExam("timer",[["off","不计时"],["90","90分钟"]],examCfg.timer?"90":"off");
+  $view.innerHTML=
+    '<div class="cfg-block"><div class="cfg-title">练习范围</div>'+rangeSeg+'</div>'+
+    '<div class="cfg-block"><div class="cfg-title">题目数量</div>'+qtySeg+
+      '<div class="cfg-note">「模拟50」= 单选30 + 多选10 + 判断10，结构同真实考试（90分及格）。</div></div>'+
+    '<div class="cfg-block"><div class="cfg-title">计时</div>'+timerSeg+
+      '<div class="cfg-note">真实考试 50 题 90 分钟；切屏 / 截屏 5 次强制交卷，练习中不做限制。</div></div>'+
+    '<button class="start-btn" id="startExam">开始答题</button>'+
+    (fine?'<div class="kbd-hint">提示：答题时按 <b>1–4</b> 直接选选项，<b>回车</b> 进入下一题。</div>':'');
+  bindSeg("range",v=>{examCfg.range=v;renderExamConfig();});
+  bindSeg("qty",v=>{examCfg.qty=v;renderExamConfig();});
+  bindSeg("timer",v=>{examCfg.timer=(v==="90");renderExamConfig();});
+  document.getElementById("startExam").onclick=startExam;
+}
+function segExam(name,pairs,val){
+  return '<div class="seg" data-seg="'+name+'">'+pairs.map(p=>'<button data-v="'+p[0]+'" class="'+(p[0]===val?"on":"")+'">'+p[1]+'</button>').join("")+'</div>';
+}
+function bindSeg(name,cb){
+  document.querySelectorAll('[data-seg="'+name+'"] button').forEach(b=>{
+    b.onclick=()=>cb(b.dataset.v);
+  });
+}
+
+/* =========================================================
+   EXAM RUN
+========================================================= */
+let exam=null,timerId=null;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startExam(){
+  let list=[];
+  const byType=t=>QUESTIONS.filter(q=>q.type===t);
+  if(examCfg.qty==="sim50" && examCfg.range==="all"){
+    list=shuffle(byType("single")).slice(0,30)
+      .concat(shuffle(byType("multiple")).slice(0,10))
+      .concat(shuffle(byType("bool")).slice(0,10));
+  }else{
+    let pool = examCfg.range==="all"?QUESTIONS:byType(examCfg.range);
+    pool=shuffle(pool);
+    if(examCfg.qty==="all")list=pool;
+    else{const n=parseInt(examCfg.qty,10);list=pool.slice(0,Math.min(n,pool.length));}
+  }
+  exam={list,idx:0,answers:{},timerOn:examCfg.timer,timeLeft:examCfg.timer?90*60:0};
+  setBar("真实答题","");
+  renderExam();
+  if(exam.timerOn){startTimer();}
+}
+function startTimer(){
+  stopTimer();
+  timerId=setInterval(()=>{
+    exam.timeLeft--;
+    if(exam.timeLeft<=0){exam.timeLeft=0;updateTimerDisplay();stopTimer();submitExam();return;}
+    updateTimerDisplay();
+  },1000);
+}
+function updateTimerDisplay(){
+  const t=document.getElementById("exTimer");
+  if(!t)return;
+  const m=Math.floor(exam.timeLeft/60),s=exam.timeLeft%60;
+  t.textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+  t.classList.toggle("warn",exam.timeLeft<=60);
+}
+function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;}}
+function renderExamStatus(){
+  const total=exam.list.length;
+  let s='<div class="exam-status"><span id="exNum">第 '+(exam.idx+1)+' / '+total+' 题</span>';
+  if(exam.timerOn){const m=Math.floor(exam.timeLeft/60),s2=exam.timeLeft%60;
+    s+='<span class="timer'+(exam.timeLeft<=60?" warn":"")+'" id="exTimer">'+String(m).padStart(2,"0")+':'+String(s2).padStart(2,"0")+'</span>';}
+  s+='</div>';
+  return s;
+}
+function renderExam(){
+  const total=exam.list.length;
+  const q=exam.list[exam.idx];
+  const userAns=exam.answers[q.id]||[];
+  let h=renderExamStatus();
+  h+='<div class="qmeta"><span class="t">'+TYPE_LABEL[q.type]+'</span>'+flagTags(q)+'</div>';
+  h+='<div class="qtext">'+esc(q.text)+'</div>';
+  if(q.type==="multiple")h+='<div class="hint-multi">本题为多选，可多选</div>';
+  h+='<div class="opts" id="exOpts">'+q.options.map(o=>{
+    const sel=userAns.includes(o.key);
+    return '<div class="opt '+(q.type==="multiple"?"multi ":"")+(sel?"sel":"")+'" data-k="'+o.key+'"><span class="lk">'+o.key+'</span><span class="lt">'+esc(o.text)+'</span></div>';
+  }).join("")+'</div>';
+  const last=exam.idx===total-1;
+  h+='<div class="navrow"><button class="btn" id="exPrev">上一题</button><button class="btn primary" id="exNext">'+(last?"提交答卷":"下一题")+'</button></div>';
+  $view.innerHTML=h;
+  document.querySelectorAll("#exOpts .opt").forEach(el=>{
+    el.onclick=()=>{
+      const k=el.dataset.k;
+      let cur=exam.answers[q.id]||[];
+      if(q.type==="multiple"){
+        if(cur.includes(k))cur=cur.filter(x=>x!==k);else cur.push(k);
+      }else{cur=[k];}
+      exam.answers[q.id]=cur;
+      renderExam();
+    };
+  });
+  document.getElementById("exPrev").onclick=()=>{if(exam.idx>0){exam.idx--;renderExam();window.scrollTo(0,0);}};
+  document.getElementById("exNext").onclick=()=>{
+    if(last){submitExam();}else{exam.idx++;renderExam();window.scrollTo(0,0);}
+  };
+}
+
+function isCorrect(q,userAns){
+  if(!userAns||!userAns.length)return false;
+  const a=[...q.answer].sort().join(",");
+  const u=[...userAns].sort().join(",");
+  return a===u;
+}
+function submitExam(){
+  stopTimer();
+  const list=exam.list;
+  let score=0,total=0;
+  const byType={single:[0,0],multiple:[0,0],bool:[0,0]};
+  const wrong=[];
+  list.forEach(q=>{
+    const w=WEIGHT[q.type];total+=w;
+    const ok=isCorrect(q,exam.answers[q.id]);
+    byType[q.type][1]++;
+    if(ok){score+=w;byType[q.type][0]++;}
+    else wrong.push(q);
+  });
+  // save wrong to book
+  const wb=loadWrong();let added=0;
+  wrong.forEach(q=>{if(!wb.includes(q.id)){wb.push(q.id);added++;}});
+  if(added)saveWrong(wb);
+  renderResults({score,total,byType,wrong,added});
+}
+function renderResults(r){
+  setBar("答题结果","");
+  const pct=Math.round(r.score/r.total*100);
+  const pass=r.score>=90;
+  let h='<div class="score-card">'+
+    '<div class="score-num">'+r.score+'<small>/ '+r.total+' 分</small></div>'+
+    '<div class="score-sub">正确率 '+pct+'% · 共 '+r.wrong.length+' 题有误</div>'+
+    '<div class="score-pass '+(pass?"ok":"no")+'">'+(pass?"达到 90 分及格线":"未达 90 分及格线")+'</div>'+
+  '</div>';
+  h+='<div class="brk">';
+  [["single","单选"],["multiple","多选"],["bool","判断"]].forEach(([t,l])=>{
+    const [c,n]=r.byType[t];
+    if(n>0)h+='<div class="brk-row"><span class="bl">'+l+'（每题 '+WEIGHT[t]+' 分）</span><span class="bv">'+c+' / '+n+' 对</span></div>';
+  });
+  h+='</div>';
+  if(r.added>0)h+='<div class="guide" style="margin-top:16px">已将 '+r.added+' 道新错题存入错题本。</div>';
+  if(r.wrong.length){
+    h+='<div class="wrong-head">错题解析</div><div class="wrong-list" id="wlist">';
+    r.wrong.forEach((q,i)=>{
+      h+='<div class="wrong-item" data-i="'+i+'"><div class="wi-main"><div class="wi-t">'+esc(q.text)+'</div><div class="wi-m">'+TYPE_LABEL[q.type]+' · 你的答案 '+fmtAns(exam.answers[q.id])+' / 正确 '+q.answer.join("、")+'</div></div><span class="wi-go">解析 →</span></div>';
+    });
+    h+='</div>';
+  }else{
+    h+='<div class="empty" style="padding:36px 0"><div class="et">全部答对</div><div class="ed">这套题你拿满分，去错题本复习别的。</div></div>';
+  }
+  h+='<div class="navrow"><button class="btn" id="rRetry">重做本套</button><button class="btn primary" id="rHome">返回首页</button></div>';
+  $view.innerHTML=h;
+  if(r.wrong.length){
+    document.querySelectorAll("#wlist .wrong-item").forEach(el=>{
+      el.onclick=()=>{openReview(r.wrong[+el.dataset.i],false);};
+    });
+  }
+  document.getElementById("rRetry").onclick=()=>{startExam();};
+  document.getElementById("rHome").onclick=()=>go("home");
+}
+function fmtAns(a){if(!a||!a.length)return "未答";return a.slice().sort().join("、");}
+
+/* =========================================================
+   WRONG BOOK (错题本)
+========================================================= */
+let wrongView={idx:0,revealed:false,list:[]};
+function renderWrong(){
+  const ids=loadWrong();
+  setBar("错题本",ids.length?'<span style="cursor:pointer" id="wClear">清空</span>':'');
+  if(!ids.length){
+    $view.innerHTML='<div class="empty"><div class="et">错题本还是空的</div><div class="ed">去「真实答题」做一套，答错的题会自动进到这里。</div><button class="btn primary" id="wGo" style="max-width:200px;margin:0 auto">去答题</button></div>';
+    document.getElementById("wGo").onclick=()=>go("exam");
+    return;
+  }
+  const map={};QUESTIONS.forEach(q=>map[q.id]=q);
+  const list=ids.map(id=>map[id]).filter(Boolean);
+  let h='<div class="qmeta"><span class="t">共 '+list.length+' 道待复习</span></div>';
+  h+='<div class="wrong-list" id="wlist">';
+  list.forEach((q,i)=>{
+    h+='<div class="wrong-item" data-i="'+i+'"><div class="wi-main"><div class="wi-t">'+esc(q.text)+'</div><div class="wi-m">'+TYPE_LABEL[q.type]+' · 正确答案 '+q.answer.join("、")+'</div></div><span class="wi-go">复习 →</span></div>';
+  });
+  h+='</div>';
+  $view.innerHTML=h;
+  document.querySelectorAll("#wlist .wrong-item").forEach(el=>{
+    el.onclick=()=>openReview(list[+el.dataset.i],true);
+  });
+  const clr=document.getElementById("wClear");
+  if(clr)clr.onclick=()=>confirmDlg("清空错题本","将移除全部 "+ids.length+" 道错题，此操作不可撤销。",()=>{clearWrong();toast("已清空");renderWrong();});
+}
+
+/* review flip used by wrong book & results */
+function openReview(q,fromWrong){
+  state.view="review";state.back=fromWrong?"wrong":"results";
+  setBar("复习","");
+  wrongView={q,fromWrong,revealed:false};
+  renderReview();
+}
+function renderReview(){
+  const q=wrongView.q;
+  let h='<div class="qmeta"><span class="t">'+TYPE_LABEL[q.type]+'</span>'+flagTags(q)+'</div>';
+  h+='<div class="qtext">'+esc(q.text)+'</div>';
+  h+='<div class="opts">'+q.options.map(o=>{
+    const correct=q.answer.includes(o.key);
+    return '<div class="opt '+(correct?"correct":"")+'"><span class="lk">'+o.key+'</span><span class="lt">'+esc(o.text)+'</span></div>';
+  }).join("")+'</div>';
+  if(wrongView.revealed){
+    h+='<div class="answer">'+buildExplanation(q)+'</div>';
+    h+='<div class="navrow"><button class="btn primary" id="rvBack">返回</button><button class="btn '+(isWrong(q.id)?"":"on-saved")+'" id="rvToggle">'+(isWrong(q.id)?"移出错题本":"加入错题本")+'</button></div>';
+  }else{
+    h+='<button class="reveal-btn" id="rvReveal">显示解析</button>';
+    if(fine)h+='<div class="kbd-hint">空格 翻面</div>';
+  }
+  $view.innerHTML=h;
+  if(wrongView.revealed){
+    document.getElementById("rvBack").onclick=()=>{ if(wrongView.fromWrong)renderWrong(); else go("home"); };
+    document.getElementById("rvToggle").onclick=()=>{toggleWrong(q.id);toast(isWrong(q.id)?"已加入错题本":"已移出错题本");renderReview();};
+  }else{
+    document.getElementById("rvReveal").onclick=()=>{wrongView.revealed=true;renderReview();};
+  }
+}
+
+/* =========================================================
+   NOTES (备考要点)
+========================================================= */
+const NUM_ANCHORS=[
+  ["企业旗舰版","198 元/人/月 = 2,376 元/人/年，腾讯云共享 VPC"],
+  ["企业专享版","316 元/人/月 = 3,792 元/人/年，腾讯云专享 VPC + 专属企业插件"],
+  ["私有化企业版","企业私有化，价格咨询售前（无标准报价单）"],
+  ["Credits","每坐席 2,000 Credits/月 → 团队共享池、每月刷新、对话不限频"],
+  ["加量包","245 元 / 5,000 Credits，有效期 6 个月，优先用最先到期的"],
+  ["腾讯文档升级","表格 2000 行→4 万行、自动化 100→5 万次/人、回收站 7→180 天"],
+  ["腾讯网盘","每席 50G ｜ 个人版协作硬顶 10 人 ｜ 专家团消耗 = 单专家 3–5 倍"],
+  ["实测数据","官方 39 项实测：30 项领先六家竞品，领先 2–3 个月"],
+];
+const TIPS=[
+  "考试是随机抽题：本清单覆盖两卷 93 题（大概率覆盖题库大头），没见过的题优先用排除法划掉「绝对化 / 反话 / 张冠李戴」选项。",
+  "✅ 题（84 道）直接按标注选，不要临场犹豫改答案。",
+  "⭐ 题（9 道）按速记卡推荐选；就算 9 道全错也还有 73 分保底，对 17 道 ✅ 就过线。",
+  "价格题必考，先背死数字锚点表（198/2376 共享VPC、316/3792 专享VPC+专属插件、私有化询价、245元加量包6个月）。",
+  "开考前关掉微信 / 企微等所有会弹窗的软件；考试中不切屏、不截屏（5 次强制交卷）。",
+  "多选注意「全选」题存在（两卷各出现过一道全选）。",
+];
+function renderNotes(){
+  setBar("备考要点","");
+  let h='<div class="notes-sec"><h3>关键数字锚点</h3><ul class="num-list">';
+  NUM_ANCHORS.forEach(([k,v])=>{h+='<li><span class="nk">'+esc(k)+'</span><span>'+esc(v)+'</span></li>';});
+  h+='</ul></div>';
+  h+='<div class="notes-sec"><h3>临场执行清单</h3><ul class="tips">';
+  TIPS.forEach(t=>{h+='<li>'+esc(t).replace(/✅|⭐/g,"")+'</li>';});
+  h+='</ul></div>';
+  $view.innerHTML=h;
+}
+
+/* =========================================================
+   toast & confirm
+========================================================= */
+let toastId=null;
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg;t.classList.add("show");
+  clearTimeout(toastId);toastId=setTimeout(()=>t.classList.remove("show"),1800);
+}
+const overlay=document.getElementById("overlay");
+function confirmDlg(title,text,onOk){
+  document.getElementById("dlgTitle").textContent=title;
+  document.getElementById("dlgText").textContent=text;
+  overlay.classList.add("show");
+  const ok=document.getElementById("dlgOk"),cancel=document.getElementById("dlgCancel");
+  const close=()=>{overlay.classList.remove("show");ok.onclick=null;cancel.onclick=null;};
+  ok.onclick=()=>{close();onOk();};
+  cancel.onclick=close;
+}
+
+/* =========================================================
+   routing & keyboard
+========================================================= */
+function render(){
+  switch(state.view){
+    case"home":renderHome();break;
+    case"memorize":renderMemorize();break;
+    case"exam":renderExamConfig();break;
+    case"wrong":renderWrong();break;
+    case"notes":renderNotes();break;
+    default:renderHome();
+  }
+}
+$view.addEventListener("click",e=>{
+  const row=e.target.closest("[data-go]");
+  if(row){go(row.dataset.go);}
+});
+$back.onclick=()=>{
+  // stop timer if leaving exam
+  if(state.view==="review"){ if(wrongView.fromWrong)renderWrong(); else go("home"); return; }
+  stopTimer();
+  go("home");
+};
+
+document.addEventListener("keydown",e=>{
+  if(state.view==="memorize"){
+    const list=memoFiltered();
+    if(e.key===" "){e.preventDefault();if(!memo.revealed){memo.revealed=true;renderMemoBody();}else if(memo.idx<list.length-1){memo.idx++;memo.revealed=false;renderMemoBody();window.scrollTo(0,0);}return;}
+    if(e.key==="ArrowRight"){if(memo.idx<list.length-1){memo.idx++;memo.revealed=false;renderMemoBody();window.scrollTo(0,0);}}
+    if(e.key==="ArrowLeft"){if(memo.idx>0){memo.idx--;memo.revealed=false;renderMemoBody();window.scrollTo(0,0);}}
+  }else if(state.view==="review"){
+    if(e.key===" "){e.preventDefault();if(!wrongView.revealed){wrongView.revealed=true;renderReview();}}
+  }else if(state.view==="exam" && exam){
+    if(["1","2","3","4"].includes(e.key)){
+      const q=exam.list[exam.idx];
+      const opt=q.options[parseInt(e.key,10)-1];
+      if(opt){
+        let cur=exam.answers[q.id]||[];
+        if(q.type==="multiple"){if(cur.includes(opt.key))cur=cur.filter(x=>x!==opt.key);else cur.push(opt.key);}
+        else cur=[opt.key];
+        exam.answers[q.id]=cur;renderExam();
+      }
+    }else if(e.key==="Enter"){
+      e.preventDefault();
+      const last=exam.idx===exam.list.length-1;
+      if(last)submitExam();else{exam.idx++;renderExam();window.scrollTo(0,0);}
+    }
+  }
+});
+
+render();
+</script>
+</body>
+</html>
