@@ -24,6 +24,20 @@
 
 排版沿用官方 `--wb2-font`（PingFang SC），顶栏高度 60px，主内容容器 820px。
 
+### 引用的官方资产
+
+| 资产 | 来源 | 用法 |
+| --- | --- | --- |
+| 官方 Logo | `assets.workbuddy.cn/.../assets/logo.svg`（原件，含渐变圆 + 猫头 + 黄色光斑） | 顶栏品牌标记、Hero 标签、**favicon**（base64 内联） |
+| 官方横版字标 | `assets/.../workbuddy-logo-WhgOvEF7.png`（1620×560） | 体积 272KB，单文件场景未采用 |
+| 图标库 | lucide v1.66.0（ISC，官网同款 `lucide-react`） | 31 个图标做成 `<symbol>` sprite，`<use>` 引用 |
+| 官网同款图标 | 从官网 bundle 反查出的 `check` / `layout-grid` / `list` / `chevron-down` / `arrow-up-right` / `gift` | 答题卡图例等 |
+
+入口图标沿用官方产品语义：背题模式 `book-open`、真实答题 `clipboard-check`、错题本 `bookmark`、概念白话 `lightbulb`、备考要点 `list-checks`、随机抽一题 `shuffle`。
+
+> 注意：官网 logo.svg 带 `clipPath` / `linearGradient` / `filter` 等 id 引用，**多实例嵌入必须给每份改一套 id 前缀**，否则引用断链、只渲染出光斑。JS 里也别把反引号写进正则字面量（`/const X=\`...\`/` 会让解析器当成模板字符串，直接语法错误）。
+
+
 ### 真实答题页
 
 - **HUD**：题型 + 进度条 + 已答题数，吸顶不随滚动消失
